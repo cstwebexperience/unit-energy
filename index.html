@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>UNIT Energy | Zero limite</title>
+<meta name="description" content="UNIT Energy — energizant made in Romania. Energy Drink, Under 18 și Energy Water, cu cafeină, taurină și vitamine B3, B5, B6, B12.">
+<meta name="theme-color" content="#0d0302">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23141414'/%3E%3Ctext x='32' y='44' font-family='Arial Black,Arial' font-weight='900' font-style='italic' font-size='30' text-anchor='middle' fill='%23ff5a2a'%3EU%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,700;0,800;1,800;1,900&family=Inter:wght@400;500;600&family=Manrope:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@4.0.0/dist/model-viewer.min.js"></script>
+<style>
+:root {
+    --text-color: #ffffff;
+    --muted-color: rgba(255, 255, 255, 0.72);
+    --glass-bg: rgba(255, 255, 255, 0.06);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --font-main: 'Inter', sans-serif;
+    --font-heading: 'Archivo', 'Arial Black', sans-serif;
+
+    /* Dynamic theme (per product) */
+    --bg-inner: #b8391a;
+    --bg-mid: #4f1508;
+    --bg-outer: #0d0302;
+    --accent: #ff5a2a;
+    --on-accent: #140603;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+    background: var(--bg-outer);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; }
+button { font-family: inherit; }
+
+/* ---------- Themed backdrop (follows the selected can) ---------- */
+.backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background: radial-gradient(circle at 50% 45%, var(--bg-inner) 0%, var(--bg-mid) 48%, var(--bg-outer) 100%);
+}
+.backdrop::after { /* film grain */
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.09;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.bg-word {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    z-index: -1;
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 900;
+    font-size: min(46vw, 64vh);
+    line-height: 0.8;
+    letter-spacing: -0.02em;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--accent);
+    opacity: 0.16;
+    transform: translate(-50%, -50%) skewX(-8deg);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+}
+.bg-stripes {
+    position: fixed;
+    inset: -20%;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.07;
+    background: repeating-linear-gradient(-62deg, transparent 0 120px, var(--accent) 120px 124px);
+    mask-image: radial-gradient(circle at center, transparent 25%, #000 75%);
+    -webkit-mask-image: radial-gradient(circle at center, transparent 25%, #000 75%);
+}
+
+#bubbles-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+.bubble-img { position: absolute; pointer-events: none; }
+@keyframes floatUpImg {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.4; }
+    100% { transform: translateY(-110vh) translateX(30px) rotate(360deg); opacity: 0; }
+}
+
+/* ---------- Header ---------- */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.6rem 4%;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 200;
+    transition: padding 0.3s ease, background 0.3s ease;
+}
+.header.scrolled {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0));
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #fff;
+    text-decoration: none;
+}
+.logo-word {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 1.9rem;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    padding: 0.15rem 0.6rem 0.2rem 0.45rem;
+    background: #fff;
+    color: #111;
+    border: 3px solid var(--accent);
+    transform: skewX(-10deg);
+    transition: border-color 0.6s ease;
+}
+.logo-sub {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--muted-color);
+    line-height: 1.3;
+}
+
+.nav {
+    display: flex;
+    gap: 0.4rem;
+    padding: 0.4rem;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+.nav-item {
+    font-family: 'Manrope', sans-serif;
+    color: var(--muted-color);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.5rem 1.2rem;
+    border-radius: 100px;
+    transition: all 0.3s ease;
+}
+.nav-item:hover, .nav-item.active { background: var(--accent); color: var(--on-accent); }
+
+.contact-btn {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 0.9rem 2rem;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.contact-btn:hover { background: rgba(0, 0, 0, 0.75); transform: translateY(-2px); }
+
+.menu-btn {
+    display: none;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #fff;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+}
+.menu-btn span, .menu-btn span::before, .menu-btn span::after {
+    display: block; width: 18px; height: 2px; background: #fff; border-radius: 2px; position: relative; transition: transform 0.3s ease, background 0.3s;
+}
+.menu-btn span::before, .menu-btn span::after { content: ''; position: absolute; left: 0; }
+.menu-btn span::before { top: -6px; }
+.menu-btn span::after { top: 6px; }
+body.menu-open .menu-btn span { background: transparent; }
+body.menu-open .menu-btn span::before { transform: translateY(6px) rotate(45deg); }
+body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg); }
+
+/* ---------- Hero ---------- */
+.hero {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    min-height: 640px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4%;
+    padding-top: 5rem;
+    overflow: hidden;
+}
+.hero-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.main-title, .side-name {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 0.84;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    color: #fff;
+}
+.main-title { font-size: clamp(3.4rem, 8vw, 9.5rem); }
+.main-title .stroke {
+    color: transparent;
+    -webkit-text-stroke: 2px #fff;
+}
+
+.leaves-container, .berries-container, .berries-container-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transition: transform 0.1s ease-out;
+}
+.leaves-container { z-index: -1; }
+.berries-container { z-index: 110; }
+.berries-container-bg { z-index: 0; }
+
+.berry {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    outline: none;
+    --progress-bar-color: transparent;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.b1 { top: 25%; left: 30%; width: 220px; height: 220px; }
+.b2 { top: 60%; left: 42%; width: 100px; height: 100px; }
+.b3 { top: 30%; left: 62%; width: 250px; height: 250px; }
+.b4 { top: 15%; left: 48%; width: 140px; height: 140px; }
+.b5 { top: 75%; left: 20%; width: 120px; height: 120px; }
+.b6 { top: 45%; left: 75%; width: 180px; height: 180px; }
+.b7 { top: 15%; left: 40%; width: 80px; height: 80px; opacity: 0.7; }
+.b8 { top: 50%; left: 55%; width: 70px; height: 70px; opacity: 0.6; }
+.b9 { top: 80%; left: 35%; width: 75px; height: 75px; opacity: 0.7; }
+
+.leaf {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    pointer-events: none;
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+    --progress-bar-color: transparent;
+}
+.l1 { top: 10%; left: 15%; }
+.l2 { top: 40%; left: 80%; width: 140px; height: 140px; opacity: 0.4; }
+.l3 { top: 70%; left: 75%; width: 80px; height: 80px; }
+.l4 { top: 85%; left: 20%; width: 120px; height: 120px; opacity: 0.3; }
+
+.hero-left {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 5rem 0 4rem;
+    gap: 1.8rem;
+    z-index: 100;
+}
+.description {
+    color: var(--muted-color);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    max-width: 380px;
+}
+.description b { color: #fff; font-weight: 600; }
+
+.primary-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.4rem 0.4rem 1.5rem;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    width: fit-content;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.primary-btn:hover { background: rgba(0, 0, 0, 0.75); transform: translateY(-3px); }
+.plus-icon {
+    background: var(--accent);
+    color: var(--on-accent);
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    font-weight: 900;
+    line-height: 1;
+    padding-bottom: 2px;
+}
+
+.award-badge { display: flex; align-items: center; gap: 1rem; margin-top: auto; }
+.award-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.award-text { display: flex; flex-direction: column; }
+.award-title { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted-color); }
+.award-subtitle { font-size: 0.85rem; font-weight: 600; }
+
+.hero-center {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeIn 1.5s ease-out 0.3s forwards, float 6s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+.glow {
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    width: min(60vw, 70vh);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent) 0%, transparent 62%);
+    opacity: 0.28;
+    filter: blur(30px);
+}
+.main-product-3d {
+    position: absolute;
+    top: calc(50% - 2.5rem);
+    left: 50%;
+    width: 80vw;
+    height: 82vh;
+    outline: none;
+    --progress-bar-color: transparent;
+    --poster-color: transparent;
+    transform: translate(-50%, -50%) rotate(18deg);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+.main-product-3d.ready { opacity: 1; }
+.hero-bottle-wrap {
+    position: absolute;
+    top: calc(50% - 2.5rem);
+    left: 50%;
+    height: 66vh;
+    transform: translate(-50%, -50%) rotate(12deg);
+    perspective: 900px;
+    pointer-events: none;
+}
+.hero-bottle {
+    height: 100%;
+    width: auto;
+    max-width: none;
+    display: block;
+    opacity: 0;
+    filter: drop-shadow(0 40px 60px rgba(0, 0, 0, 0.55));
+    will-change: transform;
+}
+
+.hero-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    text-align: right;
+    height: 100%;
+    padding: 5rem 0 4rem;
+    z-index: 100;
+    width: 460px;
+    pointer-events: none;
+}
+.product-carousel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    align-items: flex-end;
+    pointer-events: auto;
+    max-width: 100%;
+}
+.carousel-cards {
+    display: flex;
+    gap: 0.9rem;
+    max-width: 432px;
+    overflow-x: auto;
+    padding: 5.5rem 0.5rem 0.6rem;
+    margin-top: -5.5rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+}
+.carousel-cards::-webkit-scrollbar { display: none; }
+
+.card {
+    flex: 0 0 124px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    padding: 0.9rem 0.6rem 0.9rem;
+    padding-top: 4.6rem;
+    border-radius: 26px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    text-align: center;
+    scroll-snap-align: center;
+    color: #fff;
+}
+.card:hover { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.4); }
+.card.active { border-color: var(--accent); background: rgba(255,255,255,0.1); }
+.card img {
+    height: 150px;
+    width: auto;
+    margin-top: -8rem;
+    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: block;
+    pointer-events: none;
+}
+.card:not(.active) img { filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5)) brightness(0.75); }
+.card:hover img { transform: translateY(-22px) rotate(-10deg) scale(1.1); }
+.card-info { display: flex; flex-direction: column; font-size: 0.7rem; width: 100%; line-height: 1.35; }
+.card-info span:first-child { font-weight: 600; }
+.card-info span:last-child { color: var(--muted-color); }
+
+.carousel-nav { display: flex; gap: 0.8rem; align-items: center; }
+.carousel-count { font-family: 'Manrope', sans-serif; font-size: 0.75rem; color: var(--muted-color); letter-spacing: 0.1em; margin-right: 0.4rem; }
+.nav-arrow {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: background 0.3s;
+}
+.nav-arrow:hover { background: rgba(255, 255, 255, 0.14); }
+
+.side-title { align-self: flex-end; text-align: right; }
+.side-kicker {
+    display: inline-block;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    padding: 0.4rem 0.8rem;
+    border-radius: 100px;
+    background: var(--accent);
+    color: var(--on-accent);
+    margin-bottom: 1rem;
+}
+.side-name { font-size: clamp(3rem, 6.2vw, 7.6rem); }
+.side-name .line { display: block; }
+.side-name .char { display: inline-block; }
+.side-meta { margin-top: 0.9rem; font-size: 0.85rem; color: var(--muted-color); }
+
+.scroll-cue {
+    position: absolute;
+    left: 50%;
+    bottom: 1.4rem;
+    transform: translateX(-50%);
+    z-index: 120;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    color: var(--muted-color);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+.scroll-cue::after {
+    content: '';
+    width: 1px;
+    height: 34px;
+    background: linear-gradient(var(--accent), transparent);
+    animation: cue 1.8s ease-in-out infinite;
+}
+@keyframes cue { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+/* ---------- Marquee ---------- */
+.marquee {
+    position: relative;
+    z-index: 2;
+    background: var(--accent);
+    color: var(--on-accent);
+    transform: rotate(-2deg);
+    margin: 0 -2%;
+    overflow: hidden;
+    padding: 0.9rem 0;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+}
+.marquee-track {
+    display: flex;
+    gap: 2.4rem;
+    width: max-content;
+    animation: marquee 26s linear infinite;
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(1.3rem, 2.6vw, 2.1rem);
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.marquee-track span::after { content: '✕'; margin-left: 2.4rem; font-size: 0.6em; vertical-align: middle; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ---------- Sections ---------- */
+.section {
+    position: relative;
+    z-index: 2;
+    padding: 7rem 4%;
+}
+.section-head { max-width: 1240px; margin: 0 auto 3rem; display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; flex-wrap: wrap; }
+.eyebrow {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.26em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.9rem;
+    display: block;
+}
+.h2 {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(2.5rem, 6vw, 5.4rem);
+    line-height: 0.88;
+    letter-spacing: -0.02em;
+}
+.h2 .stroke { color: transparent; -webkit-text-stroke: 2px #fff; }
+.lead { color: var(--muted-color); max-width: 440px; line-height: 1.65; font-size: 1rem; }
+
+/* Range */
+.tabs {
+    display: inline-flex;
+    gap: 0.35rem;
+    padding: 0.35rem;
+    border-radius: 100px;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    flex-wrap: wrap;
+}
+.tab {
+    border: none;
+    background: transparent;
+    color: var(--muted-color);
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.65rem 1.2rem;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.tab.active, .tab:hover { background: #fff; color: #111; }
+
+.grid {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.4rem;
+}
+.p-card {
+    --c1: #333; --c2: #111; --pa: #fff;
+    position: relative;
+    border-radius: 30px;
+    overflow: hidden;
+    background: radial-gradient(120% 90% at 50% 20%, var(--c1) 0%, var(--c2) 70%);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 1.6rem 1.6rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 560px;
+    isolation: isolate;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.4s ease;
+}
+.p-card:hover { transform: translateY(-6px); border-color: var(--pa); }
+.p-card::before {
+    content: 'UNIT';
+    position: absolute;
+    left: 50%;
+    top: 38%;
+    transform: translate(-50%, -50%) rotate(-90deg) skewX(-10deg);
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 15rem;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--pa);
+    opacity: 0.22;
+    z-index: -1;
+    white-space: nowrap;
+}
+.p-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.p-badge {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.7rem;
+    border-radius: 100px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.16);
+}
+.p-vol { font-family: var(--font-heading); font-style: italic; font-weight: 900; font-size: 1.15rem; }
+.p-img {
+    height: 300px;
+    margin: 1rem auto 0.6rem;
+    display: block;
+    filter: drop-shadow(0 30px 40px rgba(0,0,0,0.5));
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.p-card:hover .p-img { transform: rotate(-8deg) scale(1.05) translateY(-8px); }
+.p-name {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 2.1rem;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+}
+.p-tag { color: rgba(255,255,255,0.78); font-size: 0.92rem; line-height: 1.5; margin: 0.6rem 0 1rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.chip {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.38rem 0.65rem;
+    border-radius: 100px;
+    background: rgba(0,0,0,0.38);
+    border: 1px solid rgba(255,255,255,0.14);
+    white-space: nowrap;
+}
+.chip.vit { background: var(--pa); color: #111; border-color: transparent; }
+.p-actions { margin-top: auto; padding-top: 1.2rem; display: flex; gap: 0.6rem; }
+.p-btn {
+    flex: 1;
+    border: 1px solid rgba(255,255,255,0.22);
+    background: rgba(0,0,0,0.4);
+    color: #fff;
+    border-radius: 100px;
+    padding: 0.8rem 1rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.p-btn:hover { background: #fff; color: #111; }
+.p-btn.ghost { flex: 0 0 auto; }
+
+/* Modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.2rem;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s;
+}
+.modal.open { opacity: 1; visibility: visible; }
+.modal-box {
+    --c1: #333; --c2: #111; --pa: #fff;
+    position: relative;
+    width: min(980px, 100%);
+    max-height: calc(100svh - 2.4rem);
+    overflow-y: auto;
+    border-radius: 30px;
+    background: radial-gradient(120% 90% at 20% 30%, var(--c1) 0%, var(--c2) 70%);
+    border: 1px solid rgba(255,255,255,0.14);
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 2rem;
+    padding: 2.4rem;
+    transform: translateY(30px) scale(0.97);
+    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.modal.open .modal-box { transform: none; }
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(0,0,0,0.45);
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 2;
+}
+.modal-img { height: min(460px, 60vh); margin: 0 auto; display: block; filter: drop-shadow(0 30px 40px rgba(0,0,0,0.5)); align-self: center; }
+.modal-body h3 { font-family: var(--font-heading); font-style: italic; font-weight: 900; text-transform: uppercase; font-size: clamp(2rem, 4vw, 3rem); line-height: 0.92; margin: 0.6rem 0 0.8rem; }
+.modal-body h4 { font-family: 'Manrope', sans-serif; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.65); margin: 1.4rem 0 0.6rem; }
+.modal-body p { color: rgba(255,255,255,0.85); line-height: 1.65; font-size: 0.92rem; }
+.spec { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin-top: 1rem; }
+.spec div { background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 0.8rem; }
+.spec b { display: block; font-family: var(--font-heading); font-style: italic; font-weight: 900; font-size: 1.25rem; }
+.spec span { font-size: 0.72rem; color: rgba(255,255,255,0.7); }
+.warn {
+    margin-top: 1.2rem;
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 16px;
+    padding: 0.9rem 1rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.85);
+}
+.warn svg { flex: 0 0 auto; margin-top: 2px; }
+
+/* Vitamins */
+.vit-grid {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.2rem;
+}
+.vit-card {
+    grid-column: span 2;
+    position: relative;
+    border-radius: 28px;
+    padding: 1.8rem;
+    background: rgba(0,0,0,0.38);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    overflow: hidden;
+}
+.vit-card.big { grid-column: span 3; padding: 2.2rem; }
+.vit-card.big .vit-code { font-size: clamp(5rem, 9vw, 8.5rem); color: var(--accent); }
+.vit-code {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 4.2rem;
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+}
+.vit-name { font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 0.9rem; margin: 0.8rem 0 1rem; color: #fff; }
+.vit-name small { display: block; font-weight: 500; font-size: 0.75rem; color: var(--muted-color); margin-top: 0.2rem; }
+.vit-list { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+.vit-list li { position: relative; padding-left: 1.4rem; color: rgba(255,255,255,0.84); font-size: 0.9rem; line-height: 1.45; }
+.vit-list li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 0.6rem; height: 0.6rem; border-radius: 2px; background: var(--accent); transform: skewX(-12deg); }
+.vit-tag {
+    position: absolute;
+    top: 1.4rem;
+    right: 1.4rem;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.6rem;
+    border-radius: 100px;
+    background: var(--accent);
+    color: var(--on-accent);
+}
+.vit-extra {
+    max-width: 1240px;
+    margin: 1.2rem auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+}
+.stat {
+    border-radius: 24px;
+    padding: 1.5rem 1.6rem;
+    border: 1px solid var(--glass-border);
+    background: rgba(255,255,255,0.05);
+}
+.stat b { font-family: var(--font-heading); font-style: italic; font-weight: 900; font-size: 2.4rem; display: block; line-height: 1; }
+.stat span { color: var(--muted-color); font-size: 0.88rem; line-height: 1.5; display: block; margin-top: 0.5rem; }
+.note { max-width: 1240px; margin: 1.4rem auto 0; color: rgba(255,255,255,0.55); font-size: 0.78rem; line-height: 1.6; }
+
+/* MGK */
+.mgk {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 1.4rem;
+    align-items: stretch;
+}
+.mgk-photo { position: relative; border-radius: 30px; overflow: hidden; min-height: 300px; }
+.mgk-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.mgk-photo:hover img { transform: scale(1.04); }
+.mgk-photo.tall { grid-row: span 2; }
+.mgk-photo.tall img { object-position: 50% 30%; }
+.mgk-text {
+    border-radius: 30px;
+    padding: 2.4rem;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.2rem;
+}
+.mgk-text .h2 { font-size: clamp(2.6rem, 5vw, 4.6rem); }
+.mgk-photo .cap {
+    position: absolute;
+    left: 1.2rem;
+    bottom: 1.2rem;
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 1.1rem;
+    background: #fff;
+    color: #111;
+    padding: 0.3rem 0.7rem;
+    border: 3px solid var(--accent);
+    transform: skewX(-10deg);
+}
+
+/* Footer */
+.footer {
+    position: relative;
+    z-index: 2;
+    padding: 5rem 4% 2.5rem;
+    background: rgba(0,0,0,0.55);
+    border-top: 1px solid var(--glass-border);
+}
+.footer-in { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 2.5rem; }
+.footer h5 { font-family: 'Manrope', sans-serif; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted-color); margin-bottom: 1rem; }
+.footer a { color: #fff; text-decoration: none; display: block; margin-bottom: 0.55rem; font-size: 0.92rem; opacity: 0.85; }
+.footer a:hover { opacity: 1; color: var(--accent); }
+.footer a.logo { display: inline-flex; opacity: 1; color: #fff; }
+.footer p { color: var(--muted-color); font-size: 0.85rem; line-height: 1.6; }
+.footer-big {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 900;
+    font-size: clamp(5rem, 22vw, 20rem);
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(255,255,255,0.18);
+    text-align: center;
+    margin: 3rem 0 1.5rem;
+    letter-spacing: -0.03em;
+    user-select: none;
+}
+.footer-bottom { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; color: rgba(255,255,255,0.5); font-size: 0.78rem; }
+
+.reveal { opacity: 0; transform: translateY(40px); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1200px) {
+    .nav-item { padding: 0.5rem 0.9rem; }
+    .hero-right { width: 400px; }
+    .main-product-3d { width: 90vw; height: 74vh; }
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .vit-card, .vit-card.big { grid-column: span 3; }
+}
+
+@media (max-width: 1024px) {
+    .nav, .contact-btn { display: none; }
+    .menu-btn { display: flex; }
+    body.menu-open .nav {
+        display: flex;
+        position: fixed;
+        top: 5.2rem;
+        left: 4%;
+        right: 4%;
+        flex-direction: column;
+        border-radius: 26px;
+        padding: 0.6rem;
+        background: rgba(10, 10, 10, 0.82);
+    }
+    body.menu-open .nav-item { padding: 1rem 1.2rem; font-size: 1rem; border-radius: 18px; }
+    .header.scrolled { padding-top: 0.8rem; }
+}
+
+@media (max-width: 900px) {
+    .hero { padding: 0 5%; padding-top: 5.2rem; min-height: 700px; }
+    .hero-content { flex-direction: column; justify-content: space-between; }
+    .hero-left { height: auto; padding: 1.2rem 0 0; gap: 0.9rem; }
+    .main-title { font-size: clamp(3rem, 15vw, 5.6rem); }
+    .description { font-size: 0.92rem; max-width: 300px; }
+    .cta-group, .award-badge { display: none; }
+    .hero-right { width: 100%; height: auto; padding: 0 0 1.4rem; align-items: stretch; }
+    .side-title { display: none; }
+    .product-carousel { align-items: stretch; gap: 0.8rem; }
+    .carousel-cards { max-width: none; width: 100%; padding-top: 4.8rem; margin-top: -4.8rem; }
+    .card { flex-basis: 104px; padding-top: 3.8rem; border-radius: 22px; gap: 0.7rem; }
+    .card img { height: 118px; margin-top: -6.6rem; }
+    .carousel-nav { justify-content: space-between; }
+    .main-product-3d { width: 120vw; height: 52svh; top: 53%; }
+    .hero-bottle-wrap { height: 38svh; top: 53%; }
+    .glow { width: 90vw; top: 49%; }
+    .scroll-cue { display: none; }
+    .berries-container-bg, .leaves-container .l2, .leaves-container .l4 { display: none; }
+    .b1 { width: 110px !important; height: 110px !important; top: 30% !important; left: 2% !important; }
+    .b2 { width: 70px !important; height: 70px !important; }
+    .b3 { width: 120px !important; height: 120px !important; top: 36% !important; left: 70% !important; }
+    .b4 { width: 80px !important; height: 80px !important; top: 22% !important; left: 66% !important; }
+    .b5 { display: none; }
+    .b6 { width: 90px !important; height: 90px !important; top: 52% !important; left: 76% !important; }
+    .side-kicker-mobile { display: inline-flex; }
+
+    .section { padding: 5rem 5%; }
+    .section-head { margin-bottom: 2rem; }
+    .section-head .tabs { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+    .section-head .tabs::-webkit-scrollbar { display: none; }
+    .tab { white-space: nowrap; flex: 0 0 auto; }
+    .header.scrolled { background: rgba(0,0,0,0.55); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+    .grid { grid-template-columns: 1fr; }
+    .p-card { min-height: 0; }
+    .p-img { height: 260px; }
+    .modal { padding: 0; align-items: flex-end; }
+    .modal-box { grid-template-columns: 1fr; padding: 1.6rem 1.3rem 1.8rem; border-radius: 28px 28px 0 0; max-height: 92svh; gap: 0.6rem; }
+    .modal-img { height: 240px; }
+    .spec { grid-template-columns: repeat(3, 1fr); }
+    .vit-grid { grid-template-columns: 1fr; }
+    .vit-card, .vit-card.big { grid-column: auto; padding: 1.6rem; }
+    .vit-extra { grid-template-columns: 1fr; }
+    .mgk { grid-template-columns: 1fr; }
+    .mgk-photo.tall { grid-row: auto; aspect-ratio: 4 / 5; }
+    .mgk-photo:not(.tall) { aspect-ratio: 2 / 1; min-height: 0; }
+    .mgk-text { padding: 1.8rem; }
+    .footer-in { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+.mobile-flavor { display: none; }
+@media (max-width: 900px) {
+    .mobile-flavor {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+        pointer-events: none;
+        min-width: 0;
+    }
+    .carousel-count { display: none; }
+    .carousel-nav { align-items: center; }
+    .mobile-flavor .side-kicker { margin: 0; font-size: 0.6rem; padding: 0.3rem 0.6rem; white-space: nowrap; }
+    .mobile-flavor .mf-name { font-family: var(--font-heading); font-style: italic; font-weight: 900; text-transform: uppercase; font-size: clamp(1.4rem, 7vw, 1.9rem); line-height: 1; white-space: nowrap; }
+}
+
+@media (max-width: 380px) {
+    .logo-word { font-size: 1.5rem; }
+    .logo-sub { display: none; }
+    .main-title { font-size: 2.9rem; }
+    .card { flex-basis: 96px; }
+    .tab { padding: 0.6rem 0.85rem; font-size: 0.78rem; }
+    .spec b { font-size: 1.05rem; }
+    .h2 { font-size: 2.3rem; }
+}
+
+@media (max-height: 720px) and (min-width: 901px) {
+    .hero-left, .hero-right { padding-top: 3rem; padding-bottom: 2rem; }
+    .main-title { font-size: clamp(3rem, 7vw, 7rem); }
+    .side-name { font-size: clamp(2.6rem, 5vw, 5.6rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .marquee-track, .hero-center { animation: none; opacity: 1; }
+}
+</style>
+</head>
+<body>
+<div class="backdrop"></div>
+<div class="bg-stripes"></div>
+<div class="bg-word" aria-hidden="true">UNIT</div>
+<div id="bubbles-container"></div>
+
+<header class="header">
+    <a href="#acasa" class="logo" aria-label="UNIT Energy">
+        <span class="logo-word">UNIT</span>
+        <span class="logo-sub">ENERGY<br>DRINK</span>
+    </a>
+    <nav class="nav glass" id="nav">
+        <a href="#acasa" class="nav-item active">Acasă</a>
+        <a href="#gama" class="nav-item">Gama</a>
+        <a href="#vitamine" class="nav-item">Vitamine</a>
+        <a href="#mgk" class="nav-item">MGK</a>
+        <a href="#contact" class="nav-item">Contact</a>
+    </nav>
+    <a href="#contact" class="contact-btn">Contactează-ne</a>
+    <button class="menu-btn" aria-label="Meniu" aria-expanded="false"><span></span></button>
+</header>
+
+<main>
+<section class="hero" id="acasa">
+    <div class="hero-content">
+        <div class="leaves-container">
+            <model-viewer class="leaf l1" src="assets/leaves.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="45deg 75deg 105%"></model-viewer>
+            <model-viewer class="leaf l2" src="assets/leaves.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="-30deg 60deg 105%"></model-viewer>
+            <model-viewer class="leaf l3" src="assets/leaves.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="120deg 85deg 105%"></model-viewer>
+            <model-viewer class="leaf l4" src="assets/leaves.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="10deg 45deg 105%"></model-viewer>
+        </div>
+
+        <div class="hero-left">
+            <h1 class="main-title">
+                Zero<br>
+                <span class="stroke">Limite</span>
+            </h1>
+            <p class="description">
+                Energie made in Romania, cu <b>vitamine B12, B6, B3 și B5</b> în fiecare doză de 0,25 L.
+            </p>
+            <div class="cta-group">
+                <a href="#gama" class="primary-btn">
+                    Vezi toată gama
+                    <span class="plus-icon">+</span>
+                </a>
+            </div>
+            <div class="award-badge">
+                <div class="award-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <div class="award-text">
+                    <span class="award-title">MADE IN ROMANIA</span>
+                    <span class="award-subtitle">MERLIN'S · UNIT ENERGY</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="berries-container-bg">
+            <model-viewer class="berry b7" src="assets/cherry.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="-20deg 110deg 105%"></model-viewer>
+            <model-viewer class="berry b8" src="assets/cherry.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="160deg 45deg 105%"></model-viewer>
+            <model-viewer class="berry b9" src="assets/cherry.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="45deg 20deg 105%"></model-viewer>
+        </div>
+
+        <div class="hero-center">
+            <div class="glow"></div>
+            <model-viewer id="product-model" src="assets/can.glb" alt="Doză UNIT Energy 3D"
+                disable-zoom shadow-intensity="0" environment-image="neutral" exposure="1.25"
+                interaction-prompt="none" camera-orbit="0deg 90deg 380%" field-of-view="30deg"
+                scale="0.8 1.12 0.8" class="main-product-3d">
+            </model-viewer>
+            <div class="hero-bottle-wrap"><img class="hero-bottle" src="assets/produse/fuel-punch.webp" alt=""></div>
+        </div>
+
+        <div class="berries-container">
+            <model-viewer class="berry b1" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="45deg 120deg 105%"></model-viewer>
+            <model-viewer class="berry b2" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="-120deg 45deg 105%"></model-viewer>
+            <model-viewer class="berry b3" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="200deg 90deg 105%"></model-viewer>
+            <model-viewer class="berry b4" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="10deg 20deg 105%"></model-viewer>
+            <model-viewer class="berry b5" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="-45deg 160deg 105%"></model-viewer>
+            <model-viewer class="berry b6" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="80deg 75deg 105%"></model-viewer>
+        </div>
+
+        <div class="hero-right">
+            <div class="product-carousel">
+                <div class="carousel-cards" id="carousel"></div>
+                <div class="carousel-nav">
+                    <span class="carousel-count" id="count">01 / 09</span>
+                    <div class="mobile-flavor"><span class="side-kicker" data-bind="kicker">ENERGY DRINK</span><span class="mf-name" data-bind="name">Original</span></div>
+                    <div style="display:flex;gap:0.8rem">
+                        <button class="nav-arrow" data-dir="-1" aria-label="Produsul anterior">←</button>
+                        <button class="nav-arrow" data-dir="1" aria-label="Produsul următor">→</button>
+                    </div>
+                </div>
+            </div>
+            <div class="side-title">
+                <span class="side-kicker" data-bind="kicker">ENERGY DRINK</span>
+                <h2 class="side-name" id="side-name"></h2>
+                <div class="side-meta" data-bind="meta">0,25 L · 30 mg cafeină / 100 ml</div>
+            </div>
+        </div>
+    </div>
+    <a href="#gama" class="scroll-cue">SCROLL</a>
+</section>
+
+<div class="marquee" aria-hidden="true">
+    <div class="marquee-track" id="marquee"></div>
+</div>
+
+<section class="section" id="gama">
+    <div class="section-head reveal">
+        <div>
+            <span class="eyebrow">Gama UNIT</span>
+            <h2 class="h2">Alege-ți<br><span class="stroke">energia</span></h2>
+        </div>
+        <div class="tabs" role="tablist">
+            <button class="tab active" data-line="all">Toate</button>
+            <button class="tab" data-line="energy">Energy Drink</button>
+            <button class="tab" data-line="u18">Under 18</button>
+            <button class="tab" data-line="water">Energy Water</button>
+        </div>
+    </div>
+    <div class="grid" id="grid"></div>
+</section>
+
+<section class="section" id="vitamine">
+    <div class="section-head reveal">
+        <div>
+            <span class="eyebrow">Ce e în doză</span>
+            <h2 class="h2">Puterea<br><span class="stroke">vitaminelor B</span></h2>
+        </div>
+        <p class="lead">Fiecare UNIT are un complex de vitamine B. Pe primul loc stau <b style="color:#fff">B12</b> și <b style="color:#fff">B6</b>, care ajută corpul să transforme ce mănânci în energie și să reducă oboseala.</p>
+    </div>
+
+    <div class="vit-grid">
+        <article class="vit-card big reveal">
+            <span class="vit-tag">Vedeta</span>
+            <div class="vit-code">B12</div>
+            <div class="vit-name">Cobalamină<small>în toată gama UNIT</small></div>
+            <ul class="vit-list">
+                <li>Contribuie la metabolismul energetic normal</li>
+                <li>Contribuie la reducerea oboselii și extenuării</li>
+                <li>Susține funcționarea normală a sistemului nervos</li>
+                <li>Contribuie la formarea normală a globulelor roșii</li>
+                <li>Susține funcțiile psihologice și sistemul imunitar</li>
+            </ul>
+        </article>
+        <article class="vit-card big reveal">
+            <span class="vit-tag">Vedeta</span>
+            <div class="vit-code">B6</div>
+            <div class="vit-name">Piridoxină<small>în toată gama UNIT</small></div>
+            <ul class="vit-list">
+                <li>Contribuie la metabolismul energetic normal</li>
+                <li>Contribuie la reducerea oboselii și extenuării</li>
+                <li>Contribuie la reglarea activității hormonale</li>
+                <li>Susține sistemul nervos și sistemul imunitar</li>
+                <li>Contribuie la formarea normală a globulelor roșii</li>
+            </ul>
+        </article>
+        <article class="vit-card reveal">
+            <div class="vit-code">B3</div>
+            <div class="vit-name">Niacină<small>în toată gama UNIT</small></div>
+            <ul class="vit-list">
+                <li>Metabolism energetic normal</li>
+                <li>Menținerea pielii normale</li>
+                <li>Reducerea oboselii</li>
+            </ul>
+        </article>
+        <article class="vit-card reveal">
+            <div class="vit-code">B5</div>
+            <div class="vit-name">Acid pantotenic<small>în toată gama UNIT</small></div>
+            <ul class="vit-list">
+                <li>Performanțe mentale normale</li>
+                <li>Metabolism energetic normal</li>
+                <li>Reducerea oboselii</li>
+            </ul>
+        </article>
+        <article class="vit-card reveal">
+            <div class="vit-code">B2</div>
+            <div class="vit-name">Riboflavină<small>în Original și Under 18 Original</small></div>
+            <ul class="vit-list">
+                <li>Menținerea vederii normale</li>
+                <li>Protejează celulele de stresul oxidativ</li>
+                <li>Reducerea oboselii</li>
+            </ul>
+        </article>
+    </div>
+
+    <div class="vit-extra">
+        <div class="stat reveal"><b>75 mg</b><span>cafeină într-o doză UNIT Energy Drink de 0,25 L (30 mg / 100 ml)</span></div>
+        <div class="stat reveal"><b>1 g</b><span>taurină într-o doză de 0,25 L (0,4%), în Original, Applee și Globery</span></div>
+        <div class="stat reveal"><b>12 mg</b><span>cafeină / 100 ml în Under 18 și Energy Water: mai blând, fără taurină</span></div>
+    </div>
+    <p class="note reveal">Beneficiile de mai sus sunt mențiunile de sănătate autorizate în UE pentru fiecare vitamină. Cantitatea exactă de vitamine la 100 ml e trecută pe ambalaj. Consumă ca parte a unei diete variate și a unui stil de viață sănătos.</p>
+</section>
+
+<section class="section" id="mgk">
+    <div class="section-head reveal">
+        <div>
+            <span class="eyebrow">Omul din spatele dozei</span>
+            <h2 class="h2">UNIT<br><span class="stroke">by MGK</span></h2>
+        </div>
+    </div>
+    <div class="mgk">
+        <div class="mgk-photo tall reveal">
+            <img src="assets/poze/mgk-elicopter.jpg" alt="MGK lângă elicopterul UNIT" loading="lazy">
+            <span class="cap">UNIT</span>
+        </div>
+        <div class="mgk-text reveal">
+            <span class="eyebrow" style="margin:0">Mentalitate</span>
+            <p class="lead" style="max-width:none;font-size:1.08rem;color:rgba(255,255,255,0.86)">UNIT e energia pentru cei care nu stau pe loc. Antrenament, studio, drum sau o noapte lungă: deschizi doza și mergi mai departe.</p>
+            <a href="#gama" class="primary-btn">Găsește-ți aroma <span class="plus-icon">+</span></a>
+        </div>
+        <div class="mgk-photo reveal">
+            <img src="assets/poze/mgk-sah.jpg" alt="MGK la masa de șah" loading="lazy">
+        </div>
+    </div>
+</section>
+</main>
+
+<footer class="footer" id="contact">
+    <div class="footer-in">
+        <div>
+            <a href="#acasa" class="logo" style="margin-bottom:1.2rem"><span class="logo-word">UNIT</span><span class="logo-sub">ENERGY<br>DRINK</span></a>
+            <p>Energizant produs în România de Merlin's. Energy Drink, Under 18 și Energy Water.</p>
+        </div>
+        <div>
+            <h5>Gama</h5>
+            <a href="#gama" data-jump="energy">Energy Drink</a>
+            <a href="#gama" data-jump="u18">Under 18</a>
+            <a href="#gama" data-jump="water">Energy Water</a>
+        </div>
+        <div>
+            <h5>Info</h5>
+            <a href="#vitamine">Vitamine</a>
+            <a href="#mgk">MGK</a>
+            <p style="margin-top:1rem">Conținut ridicat de cafeină. Nu se recomandă copiilor sau femeilor însărcinate sau care alăptează.</p>
+        </div>
+    </div>
+    <div class="footer-big" aria-hidden="true">UNIT</div>
+    <div class="footer-bottom">
+        <span>© <span id="year"></span> UNIT Energy · Merlin's</span>
+        <span>Made in Romania</span>
+    </div>
+</footer>
+
+<div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="m-title">
+        <button class="modal-close" aria-label="Închide">✕</button>
+        <img class="modal-img" id="m-img" alt="">
+        <div class="modal-body">
+            <span class="p-badge" id="m-badge"></span>
+            <h3 id="m-title"></h3>
+            <p id="m-tag"></p>
+            <div class="spec" id="m-spec"></div>
+            <h4>Vitamine</h4>
+            <div class="chips" id="m-vit"></div>
+            <h4>Ingrediente</h4>
+            <p id="m-ing"></p>
+            <div class="warn" id="m-warn"></div>
+        </div>
+    </div>
+</div>
+
+<div style="display: none;">
+    <!-- Preload fruit models to avoid lag during switch -->
+    <model-viewer src="assets/blueberry.glb"></model-viewer>
+    <model-viewer src="assets/apple.glb"></model-viewer>
+    <model-viewer src="assets/peach.glb"></model-viewer>
+    <model-viewer src="assets/lemon.glb"></model-viewer>
+</div>
+
+<script>
+// ---------------- Product data ----------------
+const WARN_ENERGY = 'Conținut ridicat de cafeină. Nu se recomandă copiilor sau femeilor însărcinate sau care alăptează (30 mg/100 ml).';
+const WARN_LIGHT = 'Conține cafeină (12 mg/100 ml).';
+const PRODUCTS = [
+    { id: 'original', line: 'energy', kicker: 'ENERGY DRINK', name: 'Original', lines: ['Original'], type: 'can', vol: '0,25 L',
+      img: 'assets/produse/original.webp', tex: 'assets/tex-original.jpg', fruit: 'assets/cherry.glb',
+      bg: ['#b8391a', '#4f1508', '#0d0302'], accent: '#ff5a2a', onAccent: '#140603', card: ['#3a1208', '#0c0302'],
+      tag: 'Rețeta clasică UNIT. Energie când ai nevoie de ea, fără ocolișuri.',
+      caffeine: '30 mg', dose: '75 mg', taurine: '1 g', vit: ['B12', 'B6', 'B3', 'B5', 'B2'], warn: WARN_ENERGY,
+      ing: 'Apă; zahăr; dextroză; acidifiant: acid citric; dioxid de carbon; taurină (0,4%); corectori de aciditate: carbonați de sodiu și carbonați de magneziu; aromă; colorant: caramel E (150d); cafeină (0,03%); vitamine: niacină, acid pantotenic, vitamina B6, riboflavină și vitamina B12.' },
+    { id: 'applee', line: 'energy', kicker: 'ENERGY DRINK', name: 'Applee', lines: ['Applee'], type: 'can', vol: '0,25 L',
+      img: 'assets/produse/applee.webp', tex: 'assets/tex-applee.jpg', fruit: 'assets/apple.glb',
+      bg: ['#6f9c1f', '#2a4309', '#080f02'], accent: '#b8e45a', onAccent: '#0f1703', card: ['#2c420c', '#080f02'],
+      tag: 'Măr verde, rece și crocant. Energie cu gust proaspăt.',
+      caffeine: '30 mg', dose: '75 mg', taurine: '1 g', vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_ENERGY,
+      ing: 'Apă; zahăr; dextroză; acidifiant: acid citric; dioxid de carbon; taurină (0,4%); corectori de aciditate: carbonați de sodiu și carbonați de magneziu; aromă; colorant: complecși de cupru ai clorofilelor și clorofilinelor; concentrat de șofrănel cu rol de colorare; cafeină (0,03%); vitamine: niacină, acid pantotenic, vitamina B6 și vitamina B12.' },
+    { id: 'globery', line: 'energy', kicker: 'ENERGY DRINK', name: 'Globery', lines: ['Globery'], type: 'can', vol: '0,25 L',
+      img: 'assets/produse/globery.webp', tex: 'assets/tex-globery.jpg', fruit: 'assets/blueberry.glb',
+      bg: ['#5a36c8', '#221152', '#06031a'], accent: '#9d80ff', onAccent: '#0c0624', card: ['#271455', '#07041a'],
+      tag: 'Aromă intensă de fructe de pădure, într-o doză neagră cu violet.',
+      caffeine: '30 mg', dose: '75 mg', taurine: '1 g', vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_ENERGY,
+      ing: 'Apă; zahăr; dextroză; acidifiant: acid citric; dioxid de carbon; taurină (0,4%); corectori de aciditate: carbonați de sodiu și carbonați de magneziu; aromă; concentrat de morcov cu rol de colorare; cafeină (0,03%); vitamine: niacină, acid pantotenic, vitamina B6 și vitamina B12.' },
+    { id: 'u18-original', line: 'u18', kicker: 'UNDER 18', name: 'Original', lines: ['Original'], type: 'can', vol: '0,25 L',
+      img: 'assets/produse/u18-original.webp', tex: 'assets/tex-u18-original.jpg', fruit: 'assets/cherry.glb',
+      bg: ['#e2531f', '#7a240a', '#160503'], accent: '#ffd21f', onAccent: '#1a1400', card: ['#a8350f', '#2a0903'],
+      tag: 'Gustul Original, cu 60% mai puțină cafeină și fără taurină.',
+      caffeine: '12 mg', dose: '30 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5', 'B2'], warn: WARN_LIGHT,
+      ing: 'Apă; zahăr; dextroză; acidifiant: acid citric; dioxid de carbon; corector de aciditate: carbonați de sodiu; carbonat de magneziu; aromă; săruri de magneziu ale acidului citric; colorant: caramel (E150d); cafeină (0,012% = 12 mg/100 ml); vitamine: niacină; acid pantotenic; vitamina B6; riboflavină și vitamina B12.' },
+    { id: 'u18-skrr', line: 'u18', kicker: 'UNDER 18', name: 'SKRR', lines: ['SKRR'], type: 'can', vol: '0,25 L',
+      img: 'assets/produse/u18-skrr.webp', tex: 'assets/tex-u18-skrr.jpg', fruit: 'assets/blueberry.glb',
+      bg: ['#8f949e', '#363a43', '#0a0b0e'], accent: '#f2d21b', onAccent: '#1a1600', card: ['#5d616b', '#121317'],
+      tag: 'Doza argintie. Cafeină redusă, fără taurină, același stil UNIT.',
+      caffeine: '12 mg', dose: '30 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
+      ing: 'Apă; zahăr; dextroză; acidifiant: acid citric; dioxid de carbon; corector de aciditate: carbonați de sodiu; carbonat de magneziu; aromă; săruri de magneziu ale acidului citric; concentrat de morcov cu rol de colorare; colorant: albastru briliant FCF; cafeină (0,012% = 12 mg/100 ml); vitamine: niacină, acid pantotenic, vitamina B6 și vitamina B12.' },
+    { id: 'u18-peachup', line: 'u18', kicker: 'UNDER 18', name: 'Peachup', lines: ['Peachup'], type: 'can', vol: '0,25 L',
+      img: 'assets/produse/u18-peachup.webp', tex: 'assets/tex-u18-peachup.jpg', fruit: 'assets/peach.glb',
+      bg: ['#cfa522', '#5c450a', '#120d02'], accent: '#ffe066', onAccent: '#1a1400', card: ['#8a6c12', '#1a1303'],
+      tag: 'Piersică dulce, în doza aurie. Cafeină redusă, fără taurină.',
+      caffeine: '12 mg', dose: '30 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
+      ing: 'Apă, zahăr, dextroză, acidifiant: acid citric; dioxid de carbon; corector de aciditate: carbonați de sodiu; carbonați de magneziu; aromă; stabilizator: gumă arabică; săruri de magneziu ale acidului citric; colorant beta-apo-8’-carotenal; cafeină (0,012% = 12 mg/100 ml); vitamine: niacină, acid pantotenic, vitamina B6 și vitamina B12.' },
+    { id: 'fuel-punch', line: 'water', kicker: 'ENERGY WATER', name: 'Fuel Punch', lines: ['Fuel', 'Punch'], type: 'bottle', vol: '0,6 L',
+      img: 'assets/produse/fuel-punch.webp', fruit: 'assets/cherry.glb',
+      bg: ['#ff4b2b', '#8a1a0c', '#180402'], accent: '#ff8a6b', onAccent: '#1a0503', card: ['#b8240f', '#2a0603'],
+      tag: 'Apă energizantă cu punch de fructe roșii. Cafeină din surse naturale.',
+      caffeine: '12 mg', dose: '72 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
+      ing: 'Apă; zahăr; acidifiant: acid citric; săruri de magneziu ale acidului citric; coloranți: licopen și caroteni; stabilizator: carboximetilceluloză de sodiu; antioxidant: acid ascorbic; arome; vitamine: niacină, vitamina B6, acid pantotenic și vitamina B12; cafeină extrasă din sursă naturală (12 mg/100 ml / 0,012%); îndulcitor: glicozide steviolice din stevia.' },
+    { id: 'peach-up', line: 'water', kicker: 'ENERGY WATER', name: 'Peach Up', lines: ['Peach', 'Up'], type: 'bottle', vol: '0,6 L',
+      img: 'assets/produse/peach-up.webp', fruit: 'assets/peach.glb',
+      bg: ['#f2a01c', '#8a520a', '#180d02'], accent: '#ffc94d', onAccent: '#1a0f00', card: ['#b06d0c', '#2a1703'],
+      tag: 'Apă energizantă cu piersică. Ușoară, răcoritoare, cu vitamine B.',
+      caffeine: '12 mg', dose: '72 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
+      ing: 'Apă; zahăr; acidifiant: acid citric; săruri de magneziu ale acidului citric; stabilizatori: carboximetilceluloză de sodiu și gumă arabică; aromă; vitamine: niacină, vitamina B6, acid pantotenic și vitamina B12; cafeină extrasă din sursă naturală (12 mg/100 ml / 0,012%); colorant: beta-apo-8’-carotenal; îndulcitor: glicozide steviolice din stevia.' },
+    { id: 'lemon-aid', line: 'water', kicker: 'ENERGY WATER', name: 'Lemon Aid', lines: ['Lemon', 'Aid'], type: 'bottle', vol: '0,6 L',
+      img: 'assets/produse/lemon-aid.webp', fruit: 'assets/lemon.glb',
+      bg: ['#b9c45a', '#4a521f', '#0c0e04'], accent: '#eef57a', onAccent: '#161900', card: ['#6f7a2a', '#141705'],
+      tag: 'Apă energizantă cu lămâie. Limpede, acidulată, cu vitamine B.',
+      caffeine: '12 mg', dose: '72 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
+      ing: 'Apă; zahăr; acidifiant: acid citric; săruri de magneziu ale acidului citric; stabilizatori: carboximetilceluloză de sodiu și gumă arabică; aromă; antioxidant: acid ascorbic; vitamine: niacină, vitamina B6, acid pantotenic și vitamina B12; cafeină extrasă din sursă naturală (12 mg/100 ml / 0,012%); îndulcitor: glicozide steviolice din stevia.' },
+];
+const LINE_LABEL = { energy: 'Energy Drink', u18: 'Under 18', water: 'Energy Water' };
+
+// ---------------- Render hero cards ----------------
+const carousel = document.getElementById('carousel');
+carousel.innerHTML = PRODUCTS.map((p, i) => `
+    <button class="card${i === 0 ? ' active' : ''}" data-index="${i}" aria-label="${p.kicker} ${p.name}">
+        <img src="${p.img}" alt="">
+        <div class="card-info"><span>${p.name}</span><span>${p.kicker === 'ENERGY DRINK' ? 'Energy' : p.kicker === 'UNDER 18' ? 'Under 18' : 'Water'} · ${p.vol}</span></div>
+    </button>`).join('');
+
+// ---------------- Hero 3D logic (from template, extended per product) ----------------
+const modelViewer = document.querySelector('#product-model');
+const bottleImg = document.querySelector('.hero-bottle');
+const berriesFG = document.querySelector('.berries-container');
+const berriesBG = document.querySelector('.berries-container-bg');
+const leavesBG = document.querySelector('.leaves-container');
+const heroContent = document.querySelector('.hero-content');
+const allBerries = document.querySelectorAll('.berry');
+const cards = document.querySelectorAll('.card');
+const textures = {};
+let current = 0;
+let isSwitching = false;
+let switchSpin = 0;
+
+function applyTexture(id) {
+    const tex = textures[id];
+    if (!modelViewer.model || !tex) return;
+    modelViewer.model.materials.forEach(material => {
+        if (material.pbrMetallicRoughness.baseColorTexture) {
+            material.pbrMetallicRoughness.baseColorTexture.setTexture(tex);
+        }
+    });
+}
+
+modelViewer.addEventListener('load', async () => {
+    try {
+        const cans = PRODUCTS.filter(p => p.type === 'can');
+        textures[PRODUCTS[current].id] = await modelViewer.createTexture(PRODUCTS[current].tex);
+        if (PRODUCTS[current].type === 'can') applyTexture(PRODUCTS[current].id);
+        modelViewer.classList.toggle('ready', PRODUCTS[current].type === 'can');
+        for (const p of cans) if (!textures[p.id]) textures[p.id] = await modelViewer.createTexture(p.tex);
+        // shader warm-up
+        for (const p of cans) { applyTexture(p.id); await new Promise(r => requestAnimationFrame(r)); }
+        if (PRODUCTS[current].type === 'can') applyTexture(PRODUCTS[current].id);
+    } catch (e) { console.error('Texture preload failed', e); modelViewer.classList.add('ready'); }
+});
+
+function setTheme(p, instant) {
+    const vars = { '--bg-inner': p.bg[0], '--bg-mid': p.bg[1], '--bg-outer': p.bg[2], '--accent': p.accent, '--on-accent': p.onAccent };
+    if (instant) Object.entries(vars).forEach(([k, v]) => document.documentElement.style.setProperty(k, v));
+    else gsap.to(document.documentElement, { ...vars, duration: 1.5, ease: 'power2.inOut' });
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', p.bg[2]);
+}
+
+function setTexts(p, animate) {
+    document.querySelectorAll('[data-bind="kicker"]').forEach(el => el.textContent = p.kicker);
+    document.querySelectorAll('[data-bind="name"]').forEach(el => el.textContent = p.name);
+    document.querySelectorAll('[data-bind="meta"]').forEach(el => el.textContent = `${p.vol} · ${p.caffeine} cafeină / 100 ml`);
+    const side = document.getElementById('side-name');
+    side.innerHTML = p.lines.map(l => `<span class="line">${[...l].map(c => `<span class="char">${c === ' ' ? '&nbsp;' : c}</span>`).join('')}</span>`).join('');
+    if (animate) gsap.from(side.querySelectorAll('.char'), { yPercent: 110, opacity: 0, rotate: 8, stagger: 0.035, duration: 0.7, ease: 'back.out(1.6)' });
+    document.getElementById('count').textContent = `${String(current + 1).padStart(2, '0')} / ${String(PRODUCTS.length).padStart(2, '0')}`;
+}
+
+function selectProduct(index) {
+    if (isSwitching || index === current) return;
+    index = (index + PRODUCTS.length) % PRODUCTS.length;
+    const prev = PRODUCTS[current];
+    current = index;
+    cards.forEach(c => c.classList.toggle('active', +c.dataset.index === index));
+    const card = cards[index];
+    carousel.scrollTo({ left: card.offsetLeft - carousel.clientWidth / 2 + card.clientWidth / 2, behavior: 'smooth' });
+    switchFlavor(prev, PRODUCTS[index]);
+}
+
+cards.forEach(card => card.addEventListener('click', () => selectProduct(+card.dataset.index)));
+document.querySelectorAll('.nav-arrow').forEach(b => b.addEventListener('click', () => selectProduct(current + +b.dataset.dir)));
+
+async function switchFlavor(prev, next) {
+    if (isSwitching) return;
+    isSwitching = true;
+    const berries = document.querySelectorAll('.berry');
+    const heroCenter = document.querySelector('.hero-center');
+
+    // 1. Background + accent
+    setTheme(next);
+    setTexts(next, true);
+
+    // 2. Spin (can or bottle) with blur, swap at peak
+    const spinObj = { val: 0, blur: 0 };
+    const setBlur = v => { modelViewer.style.filter = `blur(${v}px)`; bottleImg.style.filter = `blur(${v}px) drop-shadow(0 40px 60px rgba(0,0,0,0.55))`; };
+    gsap.to(spinObj, {
+        val: 360,
+        blur: 15,
+        duration: 0.6,
+        ease: 'power2.in',
+        onUpdate: () => { switchSpin = spinObj.val; setBlur(spinObj.blur); },
+        onComplete: () => {
+            if (next.type === 'can') {
+                applyTexture(next.id);
+                modelViewer.classList.add('ready');
+                gsap.set(bottleImg, { opacity: 0 });
+            } else {
+                bottleImg.src = next.img;
+                modelViewer.classList.remove('ready');
+                modelViewer.style.transition = 'none';
+                requestAnimationFrame(() => modelViewer.style.transition = '');
+                gsap.set(bottleImg, { opacity: 1 });
+            }
+            gsap.to(spinObj, {
+                val: 720,
+                blur: 0,
+                duration: 1.5,
+                ease: 'back.out(0.7)',
+                onUpdate: () => { switchSpin = spinObj.val; setBlur(spinObj.blur); },
+                onComplete: () => { switchSpin = 0; modelViewer.style.filter = 'none'; bottleImg.style.filter = ''; }
+            });
+        }
+    });
+
+    // 3. Fruits "Hide & Reveal" with dynamic positioning
+    let completedBerries = 0;
+    berries.forEach(berry => {
+        const bW = berry.offsetWidth / 2;
+        const bH = berry.offsetHeight / 2;
+        const centerX = heroContent.clientWidth / 2 - berry.offsetLeft - bW;
+        const centerY = heroContent.clientHeight / 2 - berry.offsetTop - bH;
+        const startAngle = parseFloat(berry.dataset.angle) || 0;
+        const currentBaseX = parseFloat(berry.dataset.baseX) || 0;
+        const currentBaseY = parseFloat(berry.dataset.baseY) || 0;
+        const range = window.innerWidth < 900 ? 90 : 200;
+        const nextBaseX = (Math.random() - 0.5) * range;
+        const nextBaseY = (Math.random() - 0.5) * range;
+        const done = () => { completedBerries++; if (completedBerries === berries.length) isSwitching = false; };
+
+        if (!berry.offsetParent) { berry.src = next.fruit; done(); return; } // hidden on mobile
+
+        gsap.set(berry, { rotation: startAngle, x: currentBaseX, y: currentBaseY });
+        gsap.timeline()
+            .to(berry, {
+                x: centerX, y: centerY, rotation: startAngle + 45, scale: 0.1, opacity: 0,
+                duration: 0.5, ease: 'power2.in',
+                onComplete: () => { berry.src = next.fruit; heroCenter.style.zIndex = 50; }
+            })
+            .to(berry, { duration: 0.3 })
+            .to(berry, {
+                onStart: () => { heroCenter.style.zIndex = 1; },
+                x: nextBaseX, y: nextBaseY, rotation: startAngle + 90, scale: 1, opacity: 1,
+                duration: 0.9, ease: 'back.out(1.5)',
+                onComplete: () => {
+                    berry.dataset.angle = startAngle + 90;
+                    berry.dataset.baseX = nextBaseX;
+                    berry.dataset.baseY = nextBaseY;
+                    berry.dataset.rx = 0;
+                    berry.dataset.ry = 0;
+                    gsap.set(berry, { clearProps: 'opacity,scale' });
+                    done();
+                }
+            });
+    });
+}
+
+// Track berry states for smoothing
+allBerries.forEach(b => {
+    b.dataset.rx = 0; b.dataset.ry = 0; b.dataset.angle = Math.random() * 360;
+    b.dataset.baseX = 0; b.dataset.baseY = 0;
+});
+
+let mouse = { x: 0, y: 0, px: -9999, py: -9999 };
+let currentMouse = { x: 0, y: 0 };
+let lastPointer = 0;
+const isTouch = matchMedia('(hover: none)').matches;
+
+window.addEventListener('pointermove', e => {
+    if (e.pointerType === 'touch') return;
+    mouse.x = (e.clientX / window.innerWidth) - 0.5;
+    mouse.y = (e.clientY / window.innerHeight) - 0.5;
+    mouse.px = e.clientX;
+    mouse.py = e.clientY;
+    lastPointer = Date.now();
+});
+// Touch: berries dodge the finger
+window.addEventListener('touchstart', e => { const t = e.touches[0]; mouse.px = t.clientX; mouse.py = t.clientY; }, { passive: true });
+window.addEventListener('touchend', () => { setTimeout(() => { mouse.px = -9999; mouse.py = -9999; }, 400); }, { passive: true });
+// Phone tilt
+window.addEventListener('deviceorientation', e => {
+    if (e.gamma == null) return;
+    mouse.x = Math.max(-0.5, Math.min(0.5, e.gamma / 60));
+    mouse.y = Math.max(-0.5, Math.min(0.5, (e.beta - 45) / 90));
+    lastPointer = Date.now();
+});
+
+let heroVisible = true;
+new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; }).observe(document.querySelector('.hero'));
+
+function animate() {
+    requestAnimationFrame(animate);
+    if (!heroVisible) return;
+    const time = Date.now() * 0.001;
+
+    // Idle sway when there's no pointer (touch devices)
+    if (Date.now() - lastPointer > 2500) {
+        mouse.x = Math.sin(time * 0.6) * 0.35;
+        mouse.y = Math.cos(time * 0.45) * 0.15;
+    }
+    currentMouse.x += (mouse.x - currentMouse.x) * 0.05;
+    currentMouse.y += (mouse.y - currentMouse.y) * 0.05;
+
+    modelViewer.cameraOrbit = `${(currentMouse.x * 40) + switchSpin}deg ${90 + (currentMouse.y * 20)}deg 380%`;
+    bottleImg.style.transform = `rotateY(${currentMouse.x * 30 + switchSpin}deg) rotateX(${-currentMouse.y * 12}deg)`;
+
+    berriesFG.style.transform = `translate(${currentMouse.x * 60}px, ${currentMouse.y * 60}px)`;
+    berriesBG.style.transform = `translate(${currentMouse.x * -30}px, ${currentMouse.y * -30}px)`;
+    leavesBG.style.transform = `translate(${currentMouse.x * -15}px, ${currentMouse.y * -15}px)`;
+
+    if (!isSwitching) {
+        allBerries.forEach((berry, i) => {
+            const berryRect = berry.getBoundingClientRect();
+            const berryX = berryRect.left + berryRect.width / 2;
+            const berryY = berryRect.top + berryRect.height / 2;
+            const diffX = mouse.px - berryX;
+            const diffY = mouse.py - berryY;
+            const distance = Math.sqrt(diffX * diffX + diffY * diffY) || 1;
+            let targetRx = 0, targetRy = 0, speedMult = 1;
+            if (distance < 400) {
+                const force = (400 - distance) / 400;
+                targetRx = (diffX / distance) * force * -80;
+                targetRy = (diffY / distance) * force * -80;
+                speedMult = 1 + force * 5;
+            }
+            let rx = parseFloat(berry.dataset.rx) || 0;
+            let ry = parseFloat(berry.dataset.ry) || 0;
+            let angle = parseFloat(berry.dataset.angle) || 0;
+            const baseX = parseFloat(berry.dataset.baseX) || 0;
+            const baseY = parseFloat(berry.dataset.baseY) || 0;
+            rx += (targetRx - rx) * 0.1;
+            ry += (targetRy - ry) * 0.1;
+            angle += 0.2 * speedMult;
+            berry.dataset.rx = rx;
+            berry.dataset.ry = ry;
+            berry.dataset.angle = angle;
+            const dur = [5, 7, 6, 8, 5.5, 6.5, 9, 11, 10][i % 9];
+            const phase = (time + i * 0.7) * (Math.PI * 2 / dur);
+            const floatY = Math.sin(phase) * 15;
+            const floatAngle = Math.cos(phase) * 6;
+            berry.style.transform = `translate(${rx + baseX}px, ${ry + baseY + floatY}px) rotate(${angle + floatAngle}deg)`;
+        });
+    }
+
+    document.querySelectorAll('.leaf').forEach((leaf, i) => {
+        const dur = 10 + i * 2;
+        const phase = (time + i * 1.2) * (Math.PI * 2 / dur);
+        leaf.style.transform = `translate(${Math.cos(phase * 0.5) * 15}px, ${Math.sin(phase) * 20}px) rotate(${Math.sin(phase * 0.3) * 15}deg)`;
+    });
+}
+animate();
+
+// Bubbles
+const bubblesContainer = document.getElementById('bubbles-container');
+function createBubble() {
+    if (!heroVisible || document.hidden) return;
+    const bubble = document.createElement('img');
+    bubble.src = 'assets/bubble.png';
+    bubble.className = 'bubble-img';
+    bubble.alt = '';
+    bubble.style.width = Math.random() * 20 + 10 + 'px';
+    bubble.style.left = Math.random() * 100 + '%';
+    bubble.style.bottom = '-50px';
+    bubble.style.opacity = Math.random() * 0.4 + 0.2;
+    const duration = Math.random() * 6 + 4;
+    bubble.style.animation = `floatUpImg ${duration}s linear forwards`;
+    bubblesContainer.appendChild(bubble);
+    setTimeout(() => bubble.remove(), duration * 1000);
+}
+setInterval(createBubble, window.innerWidth < 900 ? 700 : 400);
+
+// ---------------- Marquee ----------------
+const words = ['Zero limite', 'Energy Drink', 'Under 18', 'Energy Water', 'Vitamine B12 + B6', 'Made in Romania'];
+document.getElementById('marquee').innerHTML = [...words, ...words, ...words, ...words].map(w => `<span>${w}</span>`).join('');
+
+// ---------------- Range grid ----------------
+const grid = document.getElementById('grid');
+grid.innerHTML = PRODUCTS.map((p, i) => `
+    <article class="p-card" data-line="${p.line}" style="--c1:${p.card[0]};--c2:${p.card[1]};--pa:${p.accent}">
+        <div class="p-top"><span class="p-badge">${LINE_LABEL[p.line]}</span><span class="p-vol">${p.vol}</span></div>
+        <img class="p-img" src="${p.img}" alt="UNIT ${LINE_LABEL[p.line]} ${p.name}" loading="lazy">
+        <h3 class="p-name">${p.name}</h3>
+        <p class="p-tag">${p.tag}</p>
+        <div class="chips">
+            <span class="chip">${p.caffeine} cafeină / 100 ml</span>
+            ${p.taurine ? '<span class="chip">Taurină 0,4%</span>' : ''}
+            <span class="chip vit">B12 + B6</span>
+        </div>
+        <div class="p-actions">
+            <button class="p-btn" data-open="${i}">Ingrediente & vitamine</button>
+            <button class="p-btn ghost" data-show="${i}" aria-label="Vezi în 3D">3D ↑</button>
+        </div>
+    </article>`).join('');
+
+function filterLine(line) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.line === line));
+    const show = [...grid.children].filter(c => line === 'all' || c.dataset.line === line);
+    [...grid.children].forEach(c => c.style.display = show.includes(c) ? '' : 'none');
+    gsap.fromTo(show, { opacity: 0, y: 30 }, { opacity: 1, y: 0, stagger: 0.06, duration: 0.6, ease: 'power3.out' });
+}
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => filterLine(t.dataset.line)));
+document.querySelectorAll('[data-jump]').forEach(a => a.addEventListener('click', () => filterLine(a.dataset.jump)));
+
+grid.addEventListener('click', e => {
+    const open = e.target.closest('[data-open]');
+    const show = e.target.closest('[data-show]');
+    if (open) openModal(PRODUCTS[+open.dataset.open]);
+    if (show) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => selectProduct(+show.dataset.show), 500);
+    }
+});
+
+// ---------------- Modal ----------------
+const modal = document.getElementById('modal');
+const VIT_NAMES = { B12: 'B12 · cobalamină', B6: 'B6 · piridoxină', B3: 'B3 · niacină', B5: 'B5 · acid pantotenic', B2: 'B2 · riboflavină' };
+function openModal(p) {
+    const box = modal.querySelector('.modal-box');
+    box.style.setProperty('--c1', p.card[0]);
+    box.style.setProperty('--c2', p.card[1]);
+    box.style.setProperty('--pa', p.accent);
+    document.getElementById('m-img').src = p.img;
+    document.getElementById('m-img').alt = `UNIT ${p.name}`;
+    document.getElementById('m-badge').textContent = `${LINE_LABEL[p.line]} · ${p.type === 'can' ? 'Doză' : 'PET'} ${p.vol}`;
+    document.getElementById('m-title').textContent = `UNIT ${p.name}`;
+    document.getElementById('m-tag').textContent = p.tag;
+    document.getElementById('m-spec').innerHTML = `
+        <div><b>${p.caffeine}</b><span>cafeină / 100 ml</span></div>
+        <div><b>${p.dose}</b><span>cafeină / ${p.type === 'can' ? 'doză' : 'sticlă'}</span></div>
+        <div><b>${p.taurine || '0'}</b><span>${p.taurine ? 'taurină / doză' : 'fără taurină'}</span></div>`;
+    document.getElementById('m-vit').innerHTML = p.vit.map(v => `<span class="chip vit">${VIT_NAMES[v]}</span>`).join('');
+    document.getElementById('m-ing').textContent = p.ing;
+    document.getElementById('m-warn').innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3l10 18H2L12 3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v5M12 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>${p.warn} Țara de origine: România.</span>`;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    box.scrollTop = 0;
+}
+function closeModal() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+}
+modal.addEventListener('click', e => { if (e.target === modal || e.target.closest('.modal-close')) closeModal(); });
+addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+    if (!modal.classList.contains('open') && heroVisible) {
+        if (e.key === 'ArrowRight') selectProduct(current + 1);
+        if (e.key === 'ArrowLeft') selectProduct(current - 1);
+    }
+});
+
+// ---------------- Header / menu / nav state ----------------
+const header = document.querySelector('.header');
+addEventListener('scroll', () => header.classList.toggle('scrolled', scrollY > 30), { passive: true });
+const menuBtn = document.querySelector('.menu-btn');
+menuBtn.addEventListener('click', () => {
+    const open = document.body.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open);
+});
+document.querySelectorAll('.nav-item').forEach(a => a.addEventListener('click', () => document.body.classList.remove('menu-open')));
+const navLinks = [...document.querySelectorAll('.nav-item')];
+const sectionIO = new IntersectionObserver(entries => entries.forEach(en => {
+    if (en.isIntersecting) navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + en.target.id));
+}), { rootMargin: '-45% 0px -50% 0px' });
+['acasa', 'gama', 'vitamine', 'mgk', 'contact'].forEach(id => sectionIO.observe(document.getElementById(id)));
+
+// Reveal on scroll
+const revealIO = new IntersectionObserver(entries => entries.forEach(en => {
+    if (en.isIntersecting) { gsap.to(en.target, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' }); revealIO.unobserve(en.target); }
+}), { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => revealIO.observe(el));
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// Initial state
+setTheme(PRODUCTS[0], true);
+setTexts(PRODUCTS[0], false);
+</script>
+</body>
+</html>

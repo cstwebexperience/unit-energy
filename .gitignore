@@ -1,0 +1,5 @@
+_shots/
+_raw/
+_*.png
+node_modules/
+.vercel

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@1,800;1,900&display=swap" rel="stylesheet">
+</head><body style="margin:0;background:#222">
+<canvas id="c" width="2048" height="2048"></canvas>
+<script>
+// Label UV region on the can model: x 0..LABEL_H (can height, top = x 0), y = circumference (front ≈ y 600)
+const LABEL_H = 1215;
+async function draw(cfg) {
+  await document.fonts.load('900 italic 100px Archivo');
+  await document.fonts.load('800 italic 100px Archivo');
+  const base = new Image(); base.src = '../assets/green-base-color.jpg'; await base.decode();
+  const c = document.getElementById('c'), ctx = c.getContext('2d');
+  ctx.drawImage(base, 0, 0);
+  ctx.fillStyle = cfg.bg; ctx.fillRect(0, 0, LABEL_H, 2048);
+
+  // upright space: u = around the can (0..2048), v = down the can (0..LABEL_H)
+  ctx.save(); ctx.translate(0, 2048); ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = cfg.bg; ctx.fillRect(0, 0, 2048, LABEL_H);
+  // subtle vertical sheen bands
+  const g = ctx.createLinearGradient(0, 0, 2048, 0);
+  g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.5, 'rgba(255,255,255,0.04)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 2048, LABEL_H);
+
+  for (const cx of [1450, 430]) panel(ctx, cx, cfg);
+  ctx.restore();
+}
+function panel(ctx, cx, cfg) {
+  const top = 175, bottom = cfg.u18 ? 870 : 975;
+  // "ENERGY" header
+  ctx.font = `900 italic ${cfg.u18 ? 46 : 54}px Archivo`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = cfg.head;
+  ctx.fillText(cfg.u18 ? 'E N E R G Y' : 'ENERGY DRINK', cx, 95);
+
+  // giant UNIT, reading bottom -> top
+  ctx.save();
+  const h = bottom - top;
+  ctx.translate(cx - 10, top + h / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.transform(1, 0, -0.22, 1, 0, 0);
+  ctx.font = `900 italic 420px Archivo`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.scale(h / ctx.measureText('UNIT').width, 1.45);
+  ctx.lineJoin = 'miter';
+  ctx.lineWidth = 34; ctx.strokeStyle = cfg.line; ctx.strokeText('UNIT', 0, 6);
+  ctx.lineWidth = 16; ctx.strokeStyle = cfg.bg; ctx.strokeText('UNIT', 0, 6);
+  ctx.fillStyle = '#cfd1d4'; ctx.fillText('UNIT', 0, 6);
+  ctx.restore();
+
+  // ® mark
+  ctx.font = '800 44px Archivo'; ctx.fillStyle = cfg.line;
+  ctx.fillText('®', cx + 215, top + 20);
+
+  if (cfg.u18) {
+    ctx.fillStyle = '#f2d21b';
+    ctx.fillRect(cx - 200, 905, 400, 80);
+    ctx.fillStyle = '#111'; ctx.font = '900 italic 64px Archivo';
+    ctx.fillText('UNDER 18', cx, 947);
+    ctx.fillStyle = cfg.name; ctx.font = '900 italic 92px Archivo';
+    ctx.fillText(cfg.label, cx, 1055);
+  } else {
+    ctx.fillStyle = cfg.name; ctx.font = '900 italic 104px Archivo';
+    ctx.fillText(cfg.label, cx, 1055);
+  }
+}
+window.draw = draw;
+</script>
+</body></html>
