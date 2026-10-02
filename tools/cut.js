@@ -1,35 +1,74 @@
+// Cuts the front can/bottle out of the multipack photos.
+// The right edge of the front item sits on clean white background; mirroring it around the
+// item's vertical axis gives the left edge, which removes the neighbours behind it.
 const sharp = require('sharp');
+const path = require('path');
+const dir = path.join(__dirname, '..', 'assets');
+
+// [source, box x0, y0, x1, y1] — box must contain the whole front item with only white to its right
 const jobs = {
-  'original':      ['src/u_orig24.png.webp', 418, 120, 168, 480],
-  'applee':        ['src/u_applee.png', 704, 220, 244, 780],
-  'globery':       ['src/u_glob.png', 704, 220, 244, 780],
-  'u18-original':  ['src/u18_orig.png.webp', 418, 120, 164, 480],
-  'u18-skrr':      ['src/u18_skrr.png.webp', 416, 120, 166, 480],
-  'u18-peachup':   ['src/u18_peach.png.webp', 418, 120, 164, 480],
-  'fuel-punch':    ['src/unit_fuel_punch.png.webp', 448, 120, 140, 480],
-  'peach-up':      ['src/unit_peachup.png.webp', 448, 120, 140, 480],
-  'lemon-aid':     ['src/u_water_lem.png.webp', 444, 120, 150, 480],
+  'original':     ['src/u_orig24.png.webp', 380, 100, 600, 600],
+  'applee':       ['src/u_applee.png', 640, 200, 1000, 1000],
+  'globery':      ['src/u_glob.png', 640, 200, 1000, 1000],
+  'u18-original': ['src/u18_orig.png.webp', 380, 100, 600, 600],
+  'u18-skrr':     ['src/u18_skrr.png.webp', 380, 100, 600, 600],
+  'u18-peachup':  ['src/u18_peach.png.webp', 380, 100, 600, 600],
+  'fuel-punch':   ['src/unit_fuel_punch.png.webp', 400, 100, 600, 600],
+  'peach-up':     ['src/unit_peachup.png.webp', 400, 100, 600, 600],
+  'lemon-aid':    ['src/u_water_lem.png.webp', 400, 100, 600, 600],
 };
+const BG = 243; // a pixel is background when all channels are above this
+
 (async () => {
-  for (const [name, [f, x, y, w, h]] of Object.entries(jobs)) {
-    const meta = await sharp(f).metadata();
-    const W = Math.min(w, meta.width - x), H = Math.min(h, meta.height - y);
-    const { data, info } = await sharp(f).extract({ left: x, top: y, width: W, height: H }).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-    const n = info.width * info.height, seen = new Uint8Array(n), q = [];
-    const white = i => { const p = i * 4; return data[p + 3] < 20 || Math.min(data[p], data[p + 1], data[p + 2]) > 232; };
-    for (let i = 0; i < info.width; i++) { q.push(i, (info.height - 1) * info.width + i); }
-    for (let j = 0; j < info.height; j++) { q.push(j * info.width, j * info.width + info.width - 1); }
-    while (q.length) {
-      const i = q.pop(); if (seen[i] || !white(i)) continue; seen[i] = 1;
-      const xx = i % info.width, yy = (i / info.width) | 0;
-      if (xx > 0) q.push(i - 1); if (xx < info.width - 1) q.push(i + 1);
-      if (yy > 0) q.push(i - info.width); if (yy < info.height - 1) q.push(i + info.width);
+  for (const [name, [file, x0, y0, x1, y1]] of Object.entries(jobs)) {
+    const img = sharp(path.join(dir, file)).flatten({ background: '#ffffff' });
+    const meta = await img.metadata();
+    const bx1 = Math.min(x1, meta.width), by1 = Math.min(y1, meta.height);
+    const W = bx1 - x0, H = by1 - y0;
+    const { data } = await img.extract({ left: x0, top: y0, width: W, height: H }).raw().toBuffer({ resolveWithObject: true });
+    const ch = data.length / (W * H);
+    const solid = (x, y) => { const p = (y * W + x) * ch; return Math.min(data[p], data[p + 1], data[p + 2]) < BG; };
+
+    // right edge per row
+    const right = new Array(H).fill(-1);
+    for (let y = 0; y < H; y++) for (let x = W - 1; x >= 0; x--) if (solid(x, y)) { right[y] = x; break; }
+    const top = right.findIndex(r => r >= 0);
+    let bottom = H - 1; while (bottom > 0 && right[bottom] < 0) bottom--;
+
+    // axis from the top rows, where only the front item exists
+    const centers = [];
+    for (let y = top + 4; y < top + 26; y++) {
+      let l = -1; for (let x = 0; x < W; x++) if (solid(x, y)) { l = x; break; }
+      if (l >= 0 && right[y] > l) centers.push((l + right[y]) / 2);
     }
-    for (let i = 0; i < n; i++) if (seen[i]) data[i * 4 + 3] = 0;
-    await sharp(data, { raw: info }).blur(0.3).trim().resize({ height: 900, kernel: 'lanczos3' }).webp({ quality: 90, alphaQuality: 100 }).toFile(`produse/${name}.webp`);
+    centers.sort((a, b) => a - b);
+    const c = centers[centers.length >> 1];
+
+    // alpha mask: inside [2c - r, r], 1px soft edge
+    const out = Buffer.alloc(W * H * 4);
+    for (let y = 0; y < H; y++) {
+      const r = right[y];
+      for (let x = 0; x < W; x++) {
+        const p = (y * W + x) * ch, q = (y * W + x) * 4;
+        out[q] = data[p]; out[q + 1] = data[p + 1]; out[q + 2] = data[p + 2];
+        if (r < 0) { out[q + 3] = 0; continue; }
+        const l = 2 * c - r;
+        const d = Math.min(x - l, r - x) + 1; // distance inside the edge
+        out[q + 3] = d <= 0 ? 0 : d >= 1.5 ? 255 : Math.round(255 * d / 1.5);
+      }
+    }
+    // rows below the item that are pure background stay transparent; trim + upscale
+    await sharp(out, { raw: { width: W, height: H, channels: 4 } })
+      .extract({ left: 0, top, width: W, height: bottom - top + 1 })
+      .png().toBuffer().then(b => sharp(b).trim({ threshold: 0 }).toBuffer()).then(b => sharp(b)
+      .resize({ height: 900, kernel: 'lanczos3' })
+      .webp({ quality: 90, alphaQuality: 100 })
+      .toFile(path.join(dir, 'produse', `${name}.webp`)));
+    console.log(name, 'axis', c.toFixed(1), 'rows', top, bottom);
   }
-  const files = Object.keys(jobs);
-  const imgs = await Promise.all(files.map(n => sharp(`produse/${n}.webp`).resize({ height: 300 }).toBuffer()));
-  await sharp({ create: { width: 1200, height: 320, channels: 3, background: '#2a6b8a' } })
-    .composite(imgs.map((b, i) => ({ input: b, left: i * 130 + 5, top: 10 }))).png().toFile('../_cut.png');
+  const names = Object.keys(jobs);
+  const thumbs = await Promise.all(names.map(n => sharp(path.join(dir, 'produse', `${n}.webp`)).resize({ height: 420 }).toBuffer()));
+  let left = 10; const comp = [];
+  for (const t of thumbs) { const m = await sharp(t).metadata(); comp.push({ input: t, left, top: 10 }); left += m.width + 14; }
+  await sharp({ create: { width: left, height: 440, channels: 3, background: '#2a6b8a' } }).composite(comp).png().toFile(path.join(dir, '..', '_cut.png'));
 })();

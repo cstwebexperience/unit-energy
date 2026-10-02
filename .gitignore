@@ -3,3 +3,5 @@ _raw/
 _*.png
 node_modules/
 .vercel
+
+.vercel

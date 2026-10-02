@@ -253,7 +253,10 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
     pointer-events: none;
     transition: transform 0.1s ease-out;
 }
+.hero-center, .leaves-container, .berries-container, .berries-container-bg { top: var(--st, 0px) !important; bottom: var(--sb, 0px) !important; }
 .leaves-container { z-index: -1; }
+.leaves-container, .berries-container, .berries-container-bg { transition: transform 0.1s ease-out, opacity 0.5s ease; }
+.leaves-container.off, .berries-container.off, .berries-container-bg.off { opacity: 0; }
 .berries-container { z-index: 110; }
 .berries-container-bg { z-index: 0; }
 
@@ -956,31 +959,37 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
 }
 
 @media (max-width: 900px) {
-    .hero { padding: 0 5%; padding-top: 5.2rem; min-height: 700px; }
+    /* Phone hero: title on top, product stage in the middle, flavor + cards at the bottom.
+       --st / --sb (stage top / bottom) are measured in JS so nothing overlaps. */
+    .hero { padding: 4.8rem 5% 0; min-height: 600px; }
     .hero-content { flex-direction: column; justify-content: space-between; }
-    .hero-left { height: auto; padding: 1.2rem 0 0; gap: 0.9rem; }
-    .main-title { font-size: clamp(3rem, 15vw, 5.6rem); }
-    .description { font-size: 0.92rem; max-width: 300px; }
-    .cta-group, .award-badge { display: none; }
-    .hero-right { width: 100%; height: auto; padding: 0 0 1.4rem; align-items: stretch; }
-    .side-title { display: none; }
-    .product-carousel { align-items: stretch; gap: 0.8rem; }
-    .carousel-cards { max-width: none; width: 100%; padding-top: 4.8rem; margin-top: -4.8rem; }
-    .card { flex-basis: 104px; padding-top: 3.8rem; border-radius: 22px; gap: 0.7rem; }
-    .card img { height: 118px; margin-top: -6.6rem; }
-    .carousel-nav { justify-content: space-between; }
-    .main-product-3d { width: 120vw; height: 52svh; top: 53%; }
-    .hero-bottle-wrap { height: 38svh; top: 53%; }
-    .glow { width: 90vw; top: 49%; }
-    .scroll-cue { display: none; }
-    .berries-container-bg, .leaves-container .l2, .leaves-container .l4 { display: none; }
-    .b1 { width: 110px !important; height: 110px !important; top: 30% !important; left: 2% !important; }
-    .b2 { width: 70px !important; height: 70px !important; }
-    .b3 { width: 120px !important; height: 120px !important; top: 36% !important; left: 70% !important; }
-    .b4 { width: 80px !important; height: 80px !important; top: 22% !important; left: 66% !important; }
-    .b5 { display: none; }
-    .b6 { width: 90px !important; height: 90px !important; top: 52% !important; left: 76% !important; }
-    .side-kicker-mobile { display: inline-flex; }
+    .hero-left { height: auto; padding: 0.4rem 0 0; gap: 0.5rem; }
+    .main-title { font-size: min(10.4vw, 3.4rem); }
+    .main-title br { display: none; }
+    .main-title .stroke { -webkit-text-stroke-width: 1.5px; }
+    .description { font-size: 0.86rem; line-height: 1.5; max-width: 34ch; }
+    .cta-group, .award-badge, .side-title, .scroll-cue { display: none; }
+    .hero-right { width: 100%; height: auto; padding: 0 0 calc(0.9rem + env(safe-area-inset-bottom)); align-items: stretch; }
+    .product-carousel { align-items: stretch; gap: 0.7rem; }
+    .carousel-nav { order: -1; justify-content: space-between; }
+    .nav-arrow { width: 42px; height: 42px; }
+    .carousel-cards { max-width: none; width: 100%; padding: 0.2rem 0.2rem 0.3rem; margin: 0; gap: 0.55rem; }
+    .card { flex: 0 0 78px; padding: 0.5rem 0.3rem 0.55rem; border-radius: 18px; gap: 0.35rem; }
+    .card img { height: 84px; margin-top: 0; }
+    .card:hover img { transform: none; }
+    .card-info { font-size: 0.6rem; }
+    .card-info span:last-child { display: none; }
+    .main-product-3d { width: 100vw; height: 108%; top: 50%; transform: translate(-50%, -50%) rotate(8deg); }
+    .hero-bottle-wrap { height: 94%; top: 50%; transform: translate(-50%, -50%) rotate(6deg); }
+    .glow { width: 78vw; top: 50%; }
+    .hero-center { animation: fadeIn 1.2s ease-out 0.2s forwards, float 6s ease-in-out infinite; }
+    .berries-container-bg, .leaves-container .l2, .leaves-container .l4, .b2, .b5 { display: none; }
+    .b1 { width: 74px !important; height: 74px !important; top: 6% !important; left: 0 !important; }
+    .b4 { width: 64px !important; height: 64px !important; top: 2% !important; left: 76% !important; }
+    .b3 { width: 84px !important; height: 84px !important; top: 60% !important; left: 74% !important; }
+    .b6 { width: 70px !important; height: 70px !important; top: 72% !important; left: 2% !important; }
+    .l1 { top: 30%; left: 4%; }
+    .l3 { top: 40%; left: 82%; width: 54px; height: 54px; }
 
     .section { padding: 5rem 5%; }
     .section-head { margin-bottom: 2rem; }
@@ -1019,6 +1028,24 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
     .carousel-nav { align-items: center; }
     .mobile-flavor .side-kicker { margin: 0; font-size: 0.6rem; padding: 0.3rem 0.6rem; white-space: nowrap; }
     .mobile-flavor .mf-name { font-family: var(--font-heading); font-style: italic; font-weight: 900; text-transform: uppercase; font-size: clamp(1.4rem, 7vw, 1.9rem); line-height: 1; white-space: nowrap; }
+}
+
+@media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+    .p-card { padding: 0.9rem 0.8rem 0.9rem; border-radius: 22px; }
+    .p-card::before { font-size: 8rem; }
+    .p-badge { font-size: 0.52rem; padding: 0.3rem 0.5rem; letter-spacing: 0.12em; }
+    .p-vol { font-size: 0.85rem; }
+    .p-img { height: 190px; margin: 0.6rem auto 0.5rem; }
+    .p-name { font-size: 1.25rem; }
+    .p-tag { display: none; }
+    .chips { margin-top: 0.5rem; }
+    .chip { font-size: 0.6rem; padding: 0.3rem 0.5rem; }
+    .chip:not(:first-child) { display: none; }
+    .p-actions { padding-top: 0.8rem; }
+    .p-btn { padding: 0.65rem 0.4rem; font-size: 0.72rem; }
+    .p-btn.ghost { display: none; }
+    .p-card:hover { transform: none; }
 }
 
 @media (max-width: 380px) {
@@ -1067,7 +1094,7 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
 <main>
 <section class="hero" id="acasa">
     <div class="hero-content">
-        <div class="leaves-container">
+        <div class="leaves-container off">
             <model-viewer class="leaf l1" src="assets/leaves.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="45deg 75deg 105%"></model-viewer>
             <model-viewer class="leaf l2" src="assets/leaves.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="-30deg 60deg 105%"></model-viewer>
             <model-viewer class="leaf l3" src="assets/leaves.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="120deg 85deg 105%"></model-viewer>
@@ -1101,7 +1128,7 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
             </div>
         </div>
 
-        <div class="berries-container-bg">
+        <div class="berries-container-bg off">
             <model-viewer class="berry b7" src="assets/cherry.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="-20deg 110deg 105%"></model-viewer>
             <model-viewer class="berry b8" src="assets/cherry.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="160deg 45deg 105%"></model-viewer>
             <model-viewer class="berry b9" src="assets/cherry.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="45deg 20deg 105%"></model-viewer>
@@ -1117,7 +1144,7 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
             <div class="hero-bottle-wrap"><img class="hero-bottle" src="assets/produse/fuel-punch.webp" alt=""></div>
         </div>
 
-        <div class="berries-container">
+        <div class="berries-container off">
             <model-viewer class="berry b1" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="45deg 120deg 105%"></model-viewer>
             <model-viewer class="berry b2" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="-120deg 45deg 105%"></model-viewer>
             <model-viewer class="berry b3" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="200deg 90deg 105%"></model-viewer>
@@ -1311,7 +1338,6 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
     <!-- Preload fruit models to avoid lag during switch -->
     <model-viewer src="assets/blueberry.glb"></model-viewer>
     <model-viewer src="assets/apple.glb"></model-viewer>
-    <model-viewer src="assets/peach.glb"></model-viewer>
     <model-viewer src="assets/lemon.glb"></model-viewer>
 </div>
 
@@ -1321,57 +1347,57 @@ const WARN_ENERGY = 'Conținut ridicat de cafeină. Nu se recomandă copiilor sa
 const WARN_LIGHT = 'Conține cafeină (12 mg/100 ml).';
 const PRODUCTS = [
     { id: 'original', line: 'energy', kicker: 'ENERGY DRINK', name: 'Original', lines: ['Original'], type: 'can', vol: '0,25 L',
-      img: 'assets/produse/original.webp', tex: 'assets/tex-original.jpg', fruit: 'assets/cherry.glb',
+      img: 'assets/produse/original.webp', tex: 'assets/tex-original.jpg', fruit: null,
       bg: ['#b8391a', '#4f1508', '#0d0302'], accent: '#ff5a2a', onAccent: '#140603', card: ['#3a1208', '#0c0302'],
-      tag: 'Rețeta clasică UNIT. Energie când ai nevoie de ea, fără ocolișuri.',
+      tag: 'Gustul clasic de energizant. Simplu, puternic, fără arome adăugate de fructe.',
       caffeine: '30 mg', dose: '75 mg', taurine: '1 g', vit: ['B12', 'B6', 'B3', 'B5', 'B2'], warn: WARN_ENERGY,
       ing: 'Apă; zahăr; dextroză; acidifiant: acid citric; dioxid de carbon; taurină (0,4%); corectori de aciditate: carbonați de sodiu și carbonați de magneziu; aromă; colorant: caramel E (150d); cafeină (0,03%); vitamine: niacină, acid pantotenic, vitamina B6, riboflavină și vitamina B12.' },
     { id: 'applee', line: 'energy', kicker: 'ENERGY DRINK', name: 'Applee', lines: ['Applee'], type: 'can', vol: '0,25 L',
-      img: 'assets/produse/applee.webp', tex: 'assets/tex-applee.jpg', fruit: 'assets/apple.glb',
+      img: 'assets/produse/applee.webp', tex: 'assets/tex-applee.jpg', fruit: 'assets/apple.glb', leaves: true,
       bg: ['#6f9c1f', '#2a4309', '#080f02'], accent: '#b8e45a', onAccent: '#0f1703', card: ['#2c420c', '#080f02'],
-      tag: 'Măr verde, rece și crocant. Energie cu gust proaspăt.',
+      tag: 'Aromă de măr verde, proaspătă și răcoritoare.',
       caffeine: '30 mg', dose: '75 mg', taurine: '1 g', vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_ENERGY,
       ing: 'Apă; zahăr; dextroză; acidifiant: acid citric; dioxid de carbon; taurină (0,4%); corectori de aciditate: carbonați de sodiu și carbonați de magneziu; aromă; colorant: complecși de cupru ai clorofilelor și clorofilinelor; concentrat de șofrănel cu rol de colorare; cafeină (0,03%); vitamine: niacină, acid pantotenic, vitamina B6 și vitamina B12.' },
     { id: 'globery', line: 'energy', kicker: 'ENERGY DRINK', name: 'Globery', lines: ['Globery'], type: 'can', vol: '0,25 L',
       img: 'assets/produse/globery.webp', tex: 'assets/tex-globery.jpg', fruit: 'assets/blueberry.glb',
       bg: ['#5a36c8', '#221152', '#06031a'], accent: '#9d80ff', onAccent: '#0c0624', card: ['#271455', '#07041a'],
-      tag: 'Aromă intensă de fructe de pădure, într-o doză neagră cu violet.',
+      tag: 'Intens fructată și proaspătă, cu note de fructe de pădure bine coapte, accente dulci de mure și afine și o tentă discret acidulată. Finalul aromatic este revigorant, cu o senzație plăcută de prospețime.',
       caffeine: '30 mg', dose: '75 mg', taurine: '1 g', vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_ENERGY,
       ing: 'Apă; zahăr; dextroză; acidifiant: acid citric; dioxid de carbon; taurină (0,4%); corectori de aciditate: carbonați de sodiu și carbonați de magneziu; aromă; concentrat de morcov cu rol de colorare; cafeină (0,03%); vitamine: niacină, acid pantotenic, vitamina B6 și vitamina B12.' },
     { id: 'u18-original', line: 'u18', kicker: 'UNDER 18', name: 'Original', lines: ['Original'], type: 'can', vol: '0,25 L',
-      img: 'assets/produse/u18-original.webp', tex: 'assets/tex-u18-original.jpg', fruit: 'assets/cherry.glb',
+      img: 'assets/produse/u18-original.webp', tex: 'assets/tex-u18-original.jpg', fruit: null,
       bg: ['#e2531f', '#7a240a', '#160503'], accent: '#ffd21f', onAccent: '#1a1400', card: ['#a8350f', '#2a0903'],
-      tag: 'Gustul Original, cu 60% mai puțină cafeină și fără taurină.',
+      tag: 'Gustul clasic de energizant, cu 60% mai puțină cafeină și fără taurină.',
       caffeine: '12 mg', dose: '30 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5', 'B2'], warn: WARN_LIGHT,
       ing: 'Apă; zahăr; dextroză; acidifiant: acid citric; dioxid de carbon; corector de aciditate: carbonați de sodiu; carbonat de magneziu; aromă; săruri de magneziu ale acidului citric; colorant: caramel (E150d); cafeină (0,012% = 12 mg/100 ml); vitamine: niacină; acid pantotenic; vitamina B6; riboflavină și vitamina B12.' },
     { id: 'u18-skrr', line: 'u18', kicker: 'UNDER 18', name: 'SKRR', lines: ['SKRR'], type: 'can', vol: '0,25 L',
       img: 'assets/produse/u18-skrr.webp', tex: 'assets/tex-u18-skrr.jpg', fruit: 'assets/blueberry.glb',
       bg: ['#8f949e', '#363a43', '#0a0b0e'], accent: '#f2d21b', onAccent: '#1a1600', card: ['#5d616b', '#121317'],
-      tag: 'Doza argintie. Cafeină redusă, fără taurină, același stil UNIT.',
+      tag: 'Fructată și răcoritoare, cu note de fructe de pădure și accente dulci, ușor acidulate, care îi conferă un caracter plăcut și revigorant.',
       caffeine: '12 mg', dose: '30 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
       ing: 'Apă; zahăr; dextroză; acidifiant: acid citric; dioxid de carbon; corector de aciditate: carbonați de sodiu; carbonat de magneziu; aromă; săruri de magneziu ale acidului citric; concentrat de morcov cu rol de colorare; colorant: albastru briliant FCF; cafeină (0,012% = 12 mg/100 ml); vitamine: niacină, acid pantotenic, vitamina B6 și vitamina B12.' },
     { id: 'u18-peachup', line: 'u18', kicker: 'UNDER 18', name: 'Peachup', lines: ['Peachup'], type: 'can', vol: '0,25 L',
-      img: 'assets/produse/u18-peachup.webp', tex: 'assets/tex-u18-peachup.jpg', fruit: 'assets/peach.glb',
+      img: 'assets/produse/u18-peachup.webp', tex: 'assets/tex-u18-peachup.jpg', fruit: null,
       bg: ['#cfa522', '#5c450a', '#120d02'], accent: '#ffe066', onAccent: '#1a1400', card: ['#8a6c12', '#1a1303'],
-      tag: 'Piersică dulce, în doza aurie. Cafeină redusă, fără taurină.',
+      tag: 'Aromă de piersică. Cafeină redusă, fără taurină.',
       caffeine: '12 mg', dose: '30 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
       ing: 'Apă, zahăr, dextroză, acidifiant: acid citric; dioxid de carbon; corector de aciditate: carbonați de sodiu; carbonați de magneziu; aromă; stabilizator: gumă arabică; săruri de magneziu ale acidului citric; colorant beta-apo-8’-carotenal; cafeină (0,012% = 12 mg/100 ml); vitamine: niacină, acid pantotenic, vitamina B6 și vitamina B12.' },
     { id: 'fuel-punch', line: 'water', kicker: 'ENERGY WATER', name: 'Fuel Punch', lines: ['Fuel', 'Punch'], type: 'bottle', vol: '0,6 L',
-      img: 'assets/produse/fuel-punch.webp', fruit: 'assets/cherry.glb',
+      img: 'assets/produse/fuel-punch.webp', fruit: ['assets/cherry.glb', 'assets/blueberry.glb'],
       bg: ['#ff4b2b', '#8a1a0c', '#180402'], accent: '#ff8a6b', onAccent: '#1a0503', card: ['#b8240f', '#2a0603'],
-      tag: 'Apă energizantă cu punch de fructe roșii. Cafeină din surse naturale.',
+      tag: 'Profil fructat și răcoritor, cu arome de fructe specifice unui punch. Gust plăcut și echilibrat, cu o notă dulce și o ușoară aciditate care susține senzația de prospețime. Finalul este fructat, lejer și răcoritor.',
       caffeine: '12 mg', dose: '72 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
       ing: 'Apă; zahăr; acidifiant: acid citric; săruri de magneziu ale acidului citric; coloranți: licopen și caroteni; stabilizator: carboximetilceluloză de sodiu; antioxidant: acid ascorbic; arome; vitamine: niacină, vitamina B6, acid pantotenic și vitamina B12; cafeină extrasă din sursă naturală (12 mg/100 ml / 0,012%); îndulcitor: glicozide steviolice din stevia.' },
     { id: 'peach-up', line: 'water', kicker: 'ENERGY WATER', name: 'Peach Up', lines: ['Peach', 'Up'], type: 'bottle', vol: '0,6 L',
-      img: 'assets/produse/peach-up.webp', fruit: 'assets/peach.glb',
+      img: 'assets/produse/peach-up.webp', fruit: null,
       bg: ['#f2a01c', '#8a520a', '#180d02'], accent: '#ffc94d', onAccent: '#1a0f00', card: ['#b06d0c', '#2a1703'],
-      tag: 'Apă energizantă cu piersică. Ușoară, răcoritoare, cu vitamine B.',
+      tag: 'Apă energizantă cu aromă de piersică, cu cafeină din surse naturale.',
       caffeine: '12 mg', dose: '72 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
       ing: 'Apă; zahăr; acidifiant: acid citric; săruri de magneziu ale acidului citric; stabilizatori: carboximetilceluloză de sodiu și gumă arabică; aromă; vitamine: niacină, vitamina B6, acid pantotenic și vitamina B12; cafeină extrasă din sursă naturală (12 mg/100 ml / 0,012%); colorant: beta-apo-8’-carotenal; îndulcitor: glicozide steviolice din stevia.' },
     { id: 'lemon-aid', line: 'water', kicker: 'ENERGY WATER', name: 'Lemon Aid', lines: ['Lemon', 'Aid'], type: 'bottle', vol: '0,6 L',
-      img: 'assets/produse/lemon-aid.webp', fruit: 'assets/lemon.glb',
+      img: 'assets/produse/lemon-aid.webp', fruit: 'assets/lemon.glb', leaves: true,
       bg: ['#b9c45a', '#4a521f', '#0c0e04'], accent: '#eef57a', onAccent: '#161900', card: ['#6f7a2a', '#141705'],
-      tag: 'Apă energizantă cu lămâie. Limpede, acidulată, cu vitamine B.',
+      tag: 'Apă energizantă cu aromă de lămâie, cu cafeină din surse naturale.',
       caffeine: '12 mg', dose: '72 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
       ing: 'Apă; zahăr; acidifiant: acid citric; săruri de magneziu ale acidului citric; stabilizatori: carboximetilceluloză de sodiu și gumă arabică; aromă; antioxidant: acid ascorbic; vitamine: niacină, vitamina B6, acid pantotenic și vitamina B12; cafeină extrasă din sursă naturală (12 mg/100 ml / 0,012%); îndulcitor: glicozide steviolice din stevia.' },
 ];
@@ -1382,7 +1408,7 @@ const carousel = document.getElementById('carousel');
 carousel.innerHTML = PRODUCTS.map((p, i) => `
     <button class="card${i === 0 ? ' active' : ''}" data-index="${i}" aria-label="${p.kicker} ${p.name}">
         <img src="${p.img}" alt="">
-        <div class="card-info"><span>${p.name}</span><span>${p.kicker === 'ENERGY DRINK' ? 'Energy' : p.kicker === 'UNDER 18' ? 'Under 18' : 'Water'} · ${p.vol}</span></div>
+        <div class="card-info"><span>${p.line === 'u18' ? 'U18 ' : ''}${p.name}</span><span>${p.kicker === 'ENERGY DRINK' ? 'Energy' : p.kicker === 'UNDER 18' ? 'Under 18' : 'Water'} · ${p.vol}</span></div>
     </button>`).join('');
 
 // ---------------- Hero 3D logic (from template, extended per product) ----------------
@@ -1463,12 +1489,13 @@ async function switchFlavor(prev, next) {
     setTheme(next);
     setTexts(next, true);
 
-    // 2. Spin (can or bottle) with blur, swap at peak
+    // 2. Product swap: the can spins with motion blur, bottles slide/fade (no fake 3D)
     const spinObj = { val: 0, blur: 0 };
-    const setBlur = v => { modelViewer.style.filter = `blur(${v}px)`; bottleImg.style.filter = `blur(${v}px) drop-shadow(0 40px 60px rgba(0,0,0,0.55))`; };
+    const setBlur = v => { modelViewer.style.filter = v > 0.05 ? `blur(${v}px)` : 'none'; };
+    if (prev.type === 'bottle') gsap.to(bottleImg, { opacity: 0, y: -40, scale: 0.9, duration: 0.5, ease: 'power2.in' });
     gsap.to(spinObj, {
         val: 360,
-        blur: 15,
+        blur: prev.type === 'can' ? 15 : 0,
         duration: 0.6,
         ease: 'power2.in',
         onUpdate: () => { switchSpin = spinObj.val; setBlur(spinObj.blur); },
@@ -1476,13 +1503,11 @@ async function switchFlavor(prev, next) {
             if (next.type === 'can') {
                 applyTexture(next.id);
                 modelViewer.classList.add('ready');
-                gsap.set(bottleImg, { opacity: 0 });
+                if (prev.type === 'bottle') spinObj.blur = 15;
             } else {
-                bottleImg.src = next.img;
                 modelViewer.classList.remove('ready');
-                modelViewer.style.transition = 'none';
-                requestAnimationFrame(() => modelViewer.style.transition = '');
-                gsap.set(bottleImg, { opacity: 1 });
+                bottleImg.src = next.img;
+                gsap.fromTo(bottleImg, { opacity: 0, y: 70, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 1.1, ease: 'back.out(1.4)' });
             }
             gsap.to(spinObj, {
                 val: 720,
@@ -1490,38 +1515,45 @@ async function switchFlavor(prev, next) {
                 duration: 1.5,
                 ease: 'back.out(0.7)',
                 onUpdate: () => { switchSpin = spinObj.val; setBlur(spinObj.blur); },
-                onComplete: () => { switchSpin = 0; modelViewer.style.filter = 'none'; bottleImg.style.filter = ''; }
+                onComplete: () => { switchSpin = 0; setBlur(0); }
             });
         }
     });
 
-    // 3. Fruits "Hide & Reveal" with dynamic positioning
+    // 3. Fruits: only the fruit of the flavor (none for the plain energy taste)
+    const fruitFor = i => Array.isArray(next.fruit) ? next.fruit[i % next.fruit.length] : next.fruit;
+    const hasFruit = !!next.fruit;
+    leavesBG.classList.toggle('off', !next.leaves);
+    if (!hasFruit) { berriesFG.classList.add('off'); berriesBG.classList.add('off'); }
     let completedBerries = 0;
-    berries.forEach(berry => {
+    berries.forEach((berry, i) => {
         const bW = berry.offsetWidth / 2;
         const bH = berry.offsetHeight / 2;
-        const centerX = heroContent.clientWidth / 2 - berry.offsetLeft - bW;
-        const centerY = heroContent.clientHeight / 2 - berry.offsetTop - bH;
+        const centerX = berry.offsetParent ? berry.offsetParent.clientWidth / 2 - berry.offsetLeft - bW : 0;
+        const centerY = berry.offsetParent ? berry.offsetParent.clientHeight / 2 - berry.offsetTop - bH : 0;
         const startAngle = parseFloat(berry.dataset.angle) || 0;
         const currentBaseX = parseFloat(berry.dataset.baseX) || 0;
         const currentBaseY = parseFloat(berry.dataset.baseY) || 0;
-        const range = window.innerWidth < 900 ? 90 : 200;
+        const range = window.innerWidth < 900 ? 40 : 200;
         const nextBaseX = (Math.random() - 0.5) * range;
         const nextBaseY = (Math.random() - 0.5) * range;
         const done = () => { completedBerries++; if (completedBerries === berries.length) isSwitching = false; };
 
-        if (!berry.offsetParent) { berry.src = next.fruit; done(); return; } // hidden on mobile
+        if (!berry.offsetParent) { if (hasFruit) berry.src = fruitFor(i); done(); return; } // hidden on mobile
 
         gsap.set(berry, { rotation: startAngle, x: currentBaseX, y: currentBaseY });
         gsap.timeline()
             .to(berry, {
                 x: centerX, y: centerY, rotation: startAngle + 45, scale: 0.1, opacity: 0,
                 duration: 0.5, ease: 'power2.in',
-                onComplete: () => { berry.src = next.fruit; heroCenter.style.zIndex = 50; }
+                onComplete: () => { if (hasFruit) berry.src = fruitFor(i); heroCenter.style.zIndex = 50; }
             })
             .to(berry, { duration: 0.3 })
             .to(berry, {
-                onStart: () => { heroCenter.style.zIndex = 1; },
+                onStart: () => {
+                    heroCenter.style.zIndex = 1;
+                    if (hasFruit) { berriesFG.classList.remove('off'); berriesBG.classList.remove('off'); }
+                },
                 x: nextBaseX, y: nextBaseY, rotation: startAngle + 90, scale: 1, opacity: 1,
                 duration: 0.9, ease: 'back.out(1.5)',
                 onComplete: () => {
@@ -1584,7 +1616,6 @@ function animate() {
     currentMouse.y += (mouse.y - currentMouse.y) * 0.05;
 
     modelViewer.cameraOrbit = `${(currentMouse.x * 40) + switchSpin}deg ${90 + (currentMouse.y * 20)}deg 380%`;
-    bottleImg.style.transform = `rotateY(${currentMouse.x * 30 + switchSpin}deg) rotateX(${-currentMouse.y * 12}deg)`;
 
     berriesFG.style.transform = `translate(${currentMouse.x * 60}px, ${currentMouse.y * 60}px)`;
     berriesBG.style.transform = `translate(${currentMouse.x * -30}px, ${currentMouse.y * -30}px)`;
@@ -1632,6 +1663,19 @@ function animate() {
 }
 animate();
 
+// Phone layout: product stage = space between title block and carousel
+const heroLeft = document.querySelector('.hero-left');
+const heroCarousel = document.querySelector('.product-carousel');
+function layoutStage() {
+    if (innerWidth > 900) { heroContent.style.removeProperty('--st'); heroContent.style.removeProperty('--sb'); return; }
+    const hc = heroContent.getBoundingClientRect();
+    heroContent.style.setProperty('--st', (heroLeft.getBoundingClientRect().bottom - hc.top + 6) + 'px');
+    heroContent.style.setProperty('--sb', (hc.bottom - heroCarousel.getBoundingClientRect().top + 4) + 'px');
+}
+layoutStage();
+addEventListener('resize', layoutStage);
+document.fonts.ready.then(layoutStage);
+
 // Bubbles
 const bubblesContainer = document.getElementById('bubbles-container');
 function createBubble() {
@@ -1669,7 +1713,7 @@ grid.innerHTML = PRODUCTS.map((p, i) => `
             <span class="chip vit">B12 + B6</span>
         </div>
         <div class="p-actions">
-            <button class="p-btn" data-open="${i}">Ingrediente & vitamine</button>
+            <button class="p-btn" data-open="${i}">Detalii</button>
             <button class="p-btn ghost" data-show="${i}" aria-label="Vezi în 3D">3D ↑</button>
         </div>
     </article>`).join('');
