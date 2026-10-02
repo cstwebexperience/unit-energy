@@ -101,38 +101,47 @@ button { font-family: inherit; }
     100% { transform: translateY(-110vh) translateX(30px) rotate(360deg); opacity: 0; }
 }
 
-/* ---------- Header ---------- */
+/* ---------- Header: racing band ---------- */
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.6rem 4%;
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
     z-index: 200;
-    transition: padding 0.3s ease, background 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 2.4rem;
+    height: 64px;
+    padding: 0 0 0 4%;
+    background: #0a0a0a;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
-.header.scrolled {
-    padding-top: 0.8rem;
-    padding-bottom: 0.8rem;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0));
+.header::after { /* hazard stripe in the flavor color */
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 7px;
+    background: repeating-linear-gradient(-55deg, var(--accent) 0 14px, transparent 14px 22px);
+    clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 100%, 0 100%);
+    transition: background 0.6s ease;
 }
 .logo {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.55rem;
     color: #fff;
     text-decoration: none;
+    flex: 0 0 auto;
 }
 .logo-word {
     font-family: var(--font-heading);
     font-style: italic;
     font-weight: 900;
-    font-size: 1.9rem;
+    font-size: 1.7rem;
     line-height: 1;
-    letter-spacing: -0.01em;
-    padding: 0.15rem 0.6rem 0.2rem 0.45rem;
+    padding: 0.12rem 0.55rem 0.16rem 0.4rem;
     background: #fff;
     color: #111;
     border: 3px solid var(--accent);
@@ -140,74 +149,98 @@ button { font-family: inherit; }
     transition: border-color 0.6s ease;
 }
 .logo-sub {
-    font-family: 'Manrope', sans-serif;
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 800;
     font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    color: var(--muted-color);
-    line-height: 1.3;
+    letter-spacing: 0.16em;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.25;
 }
 
-.nav {
-    display: flex;
-    gap: 0.4rem;
-    padding: 0.4rem;
-    border-radius: 100px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-}
+.nav { display: flex; align-items: center; height: 100%; }
 .nav-item {
-    font-family: 'Manrope', sans-serif;
-    color: var(--muted-color);
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 0.95rem;
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 800;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 500;
-    padding: 0.5rem 1.2rem;
-    border-radius: 100px;
-    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.62);
+    transition: color 0.25s ease;
 }
-.nav-item:hover, .nav-item.active { background: var(--accent); color: var(--on-accent); }
+.nav-item + .nav-item::before {
+    content: '/';
+    position: absolute;
+    left: -0.2rem;
+    color: rgba(255, 255, 255, 0.22);
+    font-weight: 500;
+}
+.nav-item:hover { color: #fff; }
+.nav-item.active { color: var(--accent); }
+.nav-item.active::after { /* slanted marker under the active link */
+    content: '';
+    position: absolute;
+    left: 0.95rem;
+    right: 0.95rem;
+    bottom: 12px;
+    height: 3px;
+    background: var(--accent);
+    transform: skewX(-30deg);
+}
+.nav-item.only-menu { display: none; }
 
 .contact-btn {
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    padding: 0.9rem 2rem;
-    border-radius: 100px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    cursor: pointer;
+    margin-left: auto;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0 2.4rem 0 2.8rem;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 0.9rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     text-decoration: none;
-    transition: all 0.3s ease;
+    clip-path: polygon(22px 0, 100% 0, 100% 100%, 0 100%);
+    transition: background 0.6s ease, padding 0.25s ease;
 }
-.contact-btn:hover { background: rgba(0, 0, 0, 0.75); transform: translateY(-2px); }
+.contact-btn::after { content: '→'; font-style: normal; transition: transform 0.25s ease; }
+.contact-btn:hover::after { transform: translateX(4px); }
 
 .menu-btn {
     display: none;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    color: #fff;
+    margin-left: auto;
+    align-self: stretch;
+    width: 72px;
+    border: none;
+    background: var(--accent);
+    clip-path: polygon(18px 0, 100% 0, 100% 100%, 0 100%);
     cursor: pointer;
     align-items: center;
     justify-content: center;
+    padding-left: 12px;
+    transition: background 0.6s ease;
 }
 .menu-btn span, .menu-btn span::before, .menu-btn span::after {
-    display: block; width: 18px; height: 2px; background: #fff; border-radius: 2px; position: relative; transition: transform 0.3s ease, background 0.3s;
+    display: block; width: 20px; height: 3px; background: var(--on-accent); position: relative; transition: transform 0.3s ease, background 0.3s;
 }
 .menu-btn span::before, .menu-btn span::after { content: ''; position: absolute; left: 0; }
-.menu-btn span::before { top: -6px; }
-.menu-btn span::after { top: 6px; }
+.menu-btn span::before { top: -7px; }
+.menu-btn span::after { top: 7px; }
 body.menu-open .menu-btn span { background: transparent; }
-body.menu-open .menu-btn span::before { transform: translateY(6px) rotate(45deg); }
-body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg); }
+body.menu-open .menu-btn span::before { transform: translateY(7px) rotate(45deg); }
+body.menu-open .menu-btn span::after { transform: translateY(-7px) rotate(-45deg); }
 
 /* ---------- Hero ---------- */
 .hero {
@@ -251,11 +284,10 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
     position: absolute;
     inset: 0;
     pointer-events: none;
-    transition: transform 0.1s ease-out;
 }
 .hero-center, .leaves-container, .berries-container, .berries-container-bg { top: var(--st, 0px) !important; bottom: var(--sb, 0px) !important; }
 .leaves-container { z-index: -1; }
-.leaves-container, .berries-container, .berries-container-bg { transition: transform 0.1s ease-out, opacity 0.5s ease; }
+.leaves-container, .berries-container, .berries-container-bg { transition: opacity 0.5s ease; will-change: transform; }
 .leaves-container.off, .berries-container.off, .berries-container-bg.off { opacity: 0; }
 .berries-container { z-index: 110; }
 .berries-container-bg { z-index: 0; }
@@ -266,8 +298,6 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
     height: 120px;
     outline: none;
     --progress-bar-color: transparent;
-    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
-    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .b1 { top: 25%; left: 30%; width: 220px; height: 220px; }
 .b2 { top: 60%; left: 42%; width: 100px; height: 100px; }
@@ -284,7 +314,6 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
     width: 60px;
     height: 60px;
     pointer-events: none;
-    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
     --progress-bar-color: transparent;
 }
 .l1 { top: 10%; left: 15%; }
@@ -376,15 +405,14 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
     aspect-ratio: 1;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background: radial-gradient(circle, var(--accent) 0%, transparent 62%);
-    opacity: 0.28;
-    filter: blur(30px);
+    background: radial-gradient(circle, var(--accent) 0%, transparent 65%);
+    opacity: 0.24;
 }
 .main-product-3d {
     position: absolute;
     top: calc(50% - 2.5rem);
     left: 50%;
-    width: 80vw;
+    width: min(80vw, 66vh); /* vertical FOV is fixed, so width only needs to fit the tilted can */
     height: 82vh;
     outline: none;
     --progress-bar-color: transparent;
@@ -462,8 +490,7 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.28);
     text-align: center;
     scroll-snap-align: center;
     color: #fff;
@@ -935,7 +962,7 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
 @media (max-width: 1200px) {
     .nav-item { padding: 0.5rem 0.9rem; }
     .hero-right { width: 400px; }
-    .main-product-3d { width: 90vw; height: 74vh; }
+    .main-product-3d { width: min(90vw, 62vh); height: 74vh; }
     .grid { grid-template-columns: repeat(2, 1fr); }
     .vit-card, .vit-card.big { grid-column: span 3; }
 }
@@ -943,19 +970,45 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
 @media (max-width: 1024px) {
     .nav, .contact-btn { display: none; }
     .menu-btn { display: flex; }
-    body.menu-open .nav {
+    body.menu-open { overflow: hidden; }
+    body.menu-open .nav { /* full-screen menu under the band */
         display: flex;
         position: fixed;
-        top: 5.2rem;
-        left: 4%;
-        right: 4%;
+        top: 71px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: auto;
         flex-direction: column;
-        border-radius: 26px;
-        padding: 0.6rem;
-        background: rgba(10, 10, 10, 0.82);
+        align-items: flex-start;
+        justify-content: center;
+        padding: 0 7%;
+        background: #0a0a0a;
+        counter-reset: nav;
     }
-    body.menu-open .nav-item { padding: 1rem 1.2rem; font-size: 1rem; border-radius: 18px; }
-    .header.scrolled { padding-top: 0.8rem; }
+    body.menu-open .nav-item {
+        height: auto;
+        padding: 0.35rem 0;
+        font-size: clamp(2.6rem, 12vw, 4.2rem);
+        font-weight: 900;
+        letter-spacing: -0.01em;
+        color: #fff;
+        counter-increment: nav;
+    }
+    body.menu-open .nav-item::before {
+        content: '0' counter(nav);
+        position: static;
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        color: var(--accent);
+        margin-right: 0.9rem;
+        align-self: flex-start;
+        margin-top: 0.9rem;
+    }
+    body.menu-open .nav-item.active { color: var(--accent); }
+    body.menu-open .nav-item.active::after { display: none; }
+    body.menu-open .nav-item.only-menu { display: flex; }
 }
 
 @media (max-width: 900px) {
@@ -979,7 +1032,7 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
     .card:hover img { transform: none; }
     .card-info { font-size: 0.6rem; }
     .card-info span:last-child { display: none; }
-    .main-product-3d { width: 100vw; height: 108%; top: 50%; transform: translate(-50%, -50%) rotate(8deg); }
+    .main-product-3d { width: min(100vw, 70%); height: 108%; top: 50%; transform: translate(-50%, -50%) rotate(8deg); }
     .hero-bottle-wrap { height: 94%; top: 50%; transform: translate(-50%, -50%) rotate(6deg); }
     .glow { width: 78vw; top: 50%; }
     .hero-center { animation: fadeIn 1.2s ease-out 0.2s forwards, float 6s ease-in-out infinite; }
@@ -996,7 +1049,6 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
     .section-head .tabs { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
     .section-head .tabs::-webkit-scrollbar { display: none; }
     .tab { white-space: nowrap; flex: 0 0 auto; }
-    .header.scrolled { background: rgba(0,0,0,0.55); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
     .grid { grid-template-columns: 1fr; }
     .p-card { min-height: 0; }
     .p-img { height: 260px; }
@@ -1080,14 +1132,14 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
         <span class="logo-word">UNIT</span>
         <span class="logo-sub">ENERGY<br>DRINK</span>
     </a>
-    <nav class="nav glass" id="nav">
+    <nav class="nav" id="nav">
         <a href="#acasa" class="nav-item active">Acasă</a>
         <a href="#gama" class="nav-item">Gama</a>
         <a href="#vitamine" class="nav-item">Vitamine</a>
         <a href="#mgk" class="nav-item">MGK</a>
-        <a href="#contact" class="nav-item">Contact</a>
+        <a href="#contact" class="nav-item only-menu">Contact</a>
     </nav>
-    <a href="#contact" class="contact-btn">Contactează-ne</a>
+    <a href="#contact" class="contact-btn">Contact</a>
     <button class="menu-btn" aria-label="Meniu" aria-expanded="false"><span></span></button>
 </header>
 
@@ -1336,15 +1388,15 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
 
 <div style="display: none;">
     <!-- Preload fruit models to avoid lag during switch -->
-    <model-viewer src="assets/blueberry.glb"></model-viewer>
-    <model-viewer src="assets/apple.glb"></model-viewer>
-    <model-viewer src="assets/cherry.glb"></model-viewer>
-    <model-viewer src="assets/peach.glb"></model-viewer>
-    <model-viewer src="assets/blackberry.glb"></model-viewer>
-    <model-viewer src="assets/raspberry.glb"></model-viewer>
-    <model-viewer src="assets/strawberry.glb"></model-viewer>
-    <model-viewer src="assets/orange.glb"></model-viewer>
-    <model-viewer src="assets/lemon.glb"></model-viewer>
+    <model-viewer data-src="assets/blueberry.glb"></model-viewer>
+    <model-viewer data-src="assets/apple.glb"></model-viewer>
+    <model-viewer data-src="assets/cherry.glb"></model-viewer>
+    <model-viewer data-src="assets/peach.glb"></model-viewer>
+    <model-viewer data-src="assets/blackberry.glb"></model-viewer>
+    <model-viewer data-src="assets/raspberry.glb"></model-viewer>
+    <model-viewer data-src="assets/strawberry.glb"></model-viewer>
+    <model-viewer data-src="assets/orange.glb"></model-viewer>
+    <model-viewer data-src="assets/lemon.glb"></model-viewer>
 </div>
 
 <script>
@@ -1529,17 +1581,18 @@ async function switchFlavor(prev, next) {
     // 3. Fruits: only the fruit of the flavor (none for the plain energy taste)
     const fruitFor = i => Array.isArray(next.fruit) ? next.fruit[i % next.fruit.length] : next.fruit;
     const hasFruit = !!next.fruit;
-    leavesBG.classList.toggle('off', !next.leaves);
-    if (!hasFruit) { berriesFG.classList.add('off'); berriesBG.classList.add('off'); }
+    setLayer(leavesBG, !!next.leaves);
+    if (!hasFruit) { setLayer(berriesFG, false); setLayer(berriesBG, false); }
     let completedBerries = 0;
     berries.forEach((berry, i) => {
         const bW = berry.offsetWidth / 2;
         const bH = berry.offsetHeight / 2;
         const centerX = berry.offsetParent ? berry.offsetParent.clientWidth / 2 - berry.offsetLeft - bW : 0;
         const centerY = berry.offsetParent ? berry.offsetParent.clientHeight / 2 - berry.offsetTop - bH : 0;
-        const startAngle = parseFloat(berry.dataset.angle) || 0;
-        const currentBaseX = parseFloat(berry.dataset.baseX) || 0;
-        const currentBaseY = parseFloat(berry.dataset.baseY) || 0;
+        const st = bstate.get(berry);
+        const startAngle = st.angle;
+        const currentBaseX = st.baseX;
+        const currentBaseY = st.baseY;
         const range = window.innerWidth < 900 ? 40 : 200;
         const nextBaseX = (Math.random() - 0.5) * range;
         const nextBaseY = (Math.random() - 0.5) * range;
@@ -1558,22 +1611,37 @@ async function switchFlavor(prev, next) {
             .to(berry, {
                 onStart: () => {
                     heroCenter.style.zIndex = 1;
-                    if (hasFruit) { berriesFG.classList.remove('off'); berriesBG.classList.remove('off'); }
+                    if (hasFruit) { setLayer(berriesFG, true); setLayer(berriesBG, true); }
                 },
                 x: nextBaseX, y: nextBaseY, rotation: startAngle + 90, scale: 1, opacity: 1,
                 duration: 0.9, ease: 'back.out(1.5)',
                 onComplete: () => {
-                    berry.dataset.angle = startAngle + 90;
-                    berry.dataset.baseX = nextBaseX;
-                    berry.dataset.baseY = nextBaseY;
-                    berry.dataset.rx = 0;
-                    berry.dataset.ry = 0;
+                    Object.assign(st, { angle: startAngle + 90, baseX: nextBaseX, baseY: nextBaseY, rx: 0, ry: 0 });
                     gsap.set(berry, { clearProps: 'opacity,scale' });
                     done();
                 }
             });
     });
 }
+
+// Hidden 3D layers are taken out of rendering entirely (display:none), not just made transparent
+function setLayer(el, on) {
+    clearTimeout(el._hideT);
+    if (on) {
+        el.style.display = '';
+        requestAnimationFrame(() => { el.classList.remove('off'); measureFruits(); });
+    } else {
+        el.classList.add('off');
+        el._hideT = setTimeout(() => { el.style.display = 'none'; }, 520);
+    }
+}
+leavesBG.style.display = 'none';
+
+// Warm the model cache for the other flavors once the page is idle
+addEventListener('load', () => setTimeout(() => {
+    const go = () => document.querySelectorAll('model-viewer[data-src]').forEach(m => m.setAttribute('src', m.dataset.src));
+    'requestIdleCallback' in window ? requestIdleCallback(go, { timeout: 4000 }) : go();
+}, 1500));
 
 // Flat shapes (the bolt) must face the camera; round fruits keep their varied angles
 function setFruit(el, src) {
@@ -1583,11 +1651,24 @@ function setFruit(el, src) {
 }
 allBerries.forEach(b => { if (b.getAttribute('src').includes('bolt')) setFruit(b, b.getAttribute('src')); });
 
-// Track berry states for smoothing
-allBerries.forEach(b => {
-    b.dataset.rx = 0; b.dataset.ry = 0; b.dataset.angle = Math.random() * 360;
-    b.dataset.baseX = 0; b.dataset.baseY = 0;
-});
+// Per-fruit state lives in plain objects (no DOM reads in the frame loop)
+const bstate = new Map();
+allBerries.forEach(b => bstate.set(b, { rx: 0, ry: 0, angle: Math.random() * 360, baseX: 0, baseY: 0, hx: 0, hy: 0, on: false, par: b.closest('.berries-container') ? 60 : -30 }));
+const leaves = [...document.querySelectorAll('.leaf')];
+let scrollTop = scrollY;
+addEventListener('scroll', () => { scrollTop = scrollY; }, { passive: true });
+
+// Cache each fruit's resting centre (page coords, without parallax) — measured only on load/resize
+function measureFruits() {
+    allBerries.forEach(b => {
+        const st = bstate.get(b);
+        st.on = !!b.offsetParent;
+        if (!st.on) return;
+        const c = b.offsetParent.getBoundingClientRect();
+        st.hx = c.left - currentMouse.x * st.par + b.offsetLeft + b.offsetWidth / 2;
+        st.hy = c.top - currentMouse.y * st.par + scrollTop + b.offsetTop + b.offsetHeight / 2;
+    });
+}
 
 let mouse = { x: 0, y: 0, px: -9999, py: -9999 };
 let currentMouse = { x: 0, y: 0 };
@@ -1616,10 +1697,11 @@ window.addEventListener('deviceorientation', e => {
 let heroVisible = true;
 new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; }).observe(document.querySelector('.hero'));
 
+let lastOrbit = '';
 function animate() {
     requestAnimationFrame(animate);
-    if (!heroVisible) return;
-    const time = Date.now() * 0.001;
+    if (!heroVisible || document.hidden) return;
+    const time = performance.now() * 0.001;
 
     // Idle sway when there's no pointer (touch devices)
     if (Date.now() - lastPointer > 2500) {
@@ -1629,58 +1711,61 @@ function animate() {
     currentMouse.x += (mouse.x - currentMouse.x) * 0.05;
     currentMouse.y += (mouse.y - currentMouse.y) * 0.05;
 
-    modelViewer.cameraOrbit = `${(currentMouse.x * 40) + switchSpin}deg ${90 + (currentMouse.y * 20)}deg 380%`;
+    // Only re-render the can when the camera actually moved
+    const orbit = `${((currentMouse.x * 40) + switchSpin).toFixed(2)}deg ${(90 + currentMouse.y * 20).toFixed(2)}deg 380%`;
+    if (orbit !== lastOrbit) { modelViewer.cameraOrbit = orbit; lastOrbit = orbit; }
 
-    berriesFG.style.transform = `translate(${currentMouse.x * 60}px, ${currentMouse.y * 60}px)`;
-    berriesBG.style.transform = `translate(${currentMouse.x * -30}px, ${currentMouse.y * -30}px)`;
-    leavesBG.style.transform = `translate(${currentMouse.x * -15}px, ${currentMouse.y * -15}px)`;
+    const fx = currentMouse.x * 60, fy = currentMouse.y * 60;
+    berriesFG.style.transform = `translate3d(${fx}px, ${fy}px, 0)`;
+    berriesBG.style.transform = `translate3d(${currentMouse.x * -30}px, ${currentMouse.y * -30}px, 0)`;
+    leavesBG.style.transform = `translate3d(${currentMouse.x * -15}px, ${currentMouse.y * -15}px, 0)`;
 
     if (!isSwitching) {
-        allBerries.forEach((berry, i) => {
-            const berryRect = berry.getBoundingClientRect();
-            const berryX = berryRect.left + berryRect.width / 2;
-            const berryY = berryRect.top + berryRect.height / 2;
-            const diffX = mouse.px - berryX;
-            const diffY = mouse.py - berryY;
-            const distance = Math.sqrt(diffX * diffX + diffY * diffY) || 1;
-            let targetRx = 0, targetRy = 0, speedMult = 1;
-            if (distance < 400) {
-                const force = (400 - distance) / 400;
-                targetRx = (diffX / distance) * force * -80;
-                targetRy = (diffY / distance) * force * -80;
-                speedMult = 1 + force * 5;
-            }
-            let rx = parseFloat(berry.dataset.rx) || 0;
-            let ry = parseFloat(berry.dataset.ry) || 0;
-            let angle = parseFloat(berry.dataset.angle) || 0;
-            const baseX = parseFloat(berry.dataset.baseX) || 0;
-            const baseY = parseFloat(berry.dataset.baseY) || 0;
-            rx += (targetRx - rx) * 0.1;
-            ry += (targetRy - ry) * 0.1;
-            angle += 0.2 * speedMult;
-            berry.dataset.rx = rx;
-            berry.dataset.ry = ry;
-            berry.dataset.angle = angle;
-            const dur = [5, 7, 6, 8, 5.5, 6.5, 9, 11, 10][i % 9];
-            const phase = (time + i * 0.7) * (Math.PI * 2 / dur);
+        const pointerActive = mouse.px > -1000;
+        let i = 0;
+        for (const [berry, st] of bstate) {
+            const idx = i++;
+            if (!st.on) continue;
+            const dur = [5, 7, 6, 8, 5.5, 6.5, 9, 11, 10][idx % 9];
+            const phase = (time + idx * 0.7) * (Math.PI * 2 / dur);
             const floatY = Math.sin(phase) * 15;
-            const floatAngle = Math.cos(phase) * 6;
-            berry.style.transform = `translate(${rx + baseX}px, ${ry + baseY + floatY}px) rotate(${angle + floatAngle}deg)`;
-        });
+            let targetRx = 0, targetRy = 0, speedMult = 1;
+            if (pointerActive) {
+                const bx = st.hx + currentMouse.x * st.par + st.rx + st.baseX;
+                const by = st.hy - scrollTop + currentMouse.y * st.par + st.ry + st.baseY + floatY;
+                const dx = mouse.px - bx, dy = mouse.py - by;
+                const d2 = dx * dx + dy * dy;
+                if (d2 < 160000) {
+                    const distance = Math.sqrt(d2) || 1;
+                    const force = (400 - distance) / 400;
+                    targetRx = (dx / distance) * force * -80;
+                    targetRy = (dy / distance) * force * -80;
+                    speedMult = 1 + force * 5;
+                }
+            }
+            st.rx += (targetRx - st.rx) * 0.1;
+            st.ry += (targetRy - st.ry) * 0.1;
+            st.angle += 0.2 * speedMult;
+            berry.style.transform = `translate3d(${(st.rx + st.baseX).toFixed(1)}px, ${(st.ry + st.baseY + floatY).toFixed(1)}px, 0) rotate(${(st.angle + Math.cos(phase) * 6).toFixed(1)}deg)`;
+        }
     }
 
-    document.querySelectorAll('.leaf').forEach((leaf, i) => {
-        const dur = 10 + i * 2;
-        const phase = (time + i * 1.2) * (Math.PI * 2 / dur);
-        leaf.style.transform = `translate(${Math.cos(phase * 0.5) * 15}px, ${Math.sin(phase) * 20}px) rotate(${Math.sin(phase * 0.3) * 15}deg)`;
-    });
+    for (let i = 0; i < leaves.length; i++) {
+        const leaf = leaves[i];
+        const phase = (time + i * 1.2) * (Math.PI * 2 / (10 + i * 2));
+        leaf.style.transform = `translate3d(${(Math.cos(phase * 0.5) * 15).toFixed(1)}px, ${(Math.sin(phase) * 20).toFixed(1)}px, 0) rotate(${(Math.sin(phase * 0.3) * 15).toFixed(1)}deg)`;
+    }
 }
 animate();
+measureFruits();
+addEventListener('resize', () => requestAnimationFrame(measureFruits));
+addEventListener('load', measureFruits);
 
 // Phone layout: product stage = space between title block and carousel
 const heroLeft = document.querySelector('.hero-left');
 const heroCarousel = document.querySelector('.product-carousel');
 function layoutStage() {
+    requestAnimationFrame(() => typeof measureFruits === 'function' && measureFruits());
     if (innerWidth > 900) { heroContent.style.removeProperty('--st'); heroContent.style.removeProperty('--sb'); return; }
     const hc = heroContent.getBoundingClientRect();
     heroContent.style.setProperty('--st', (heroLeft.getBoundingClientRect().bottom - hc.top + 6) + 'px');
