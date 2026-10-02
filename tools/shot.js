@@ -21,7 +21,7 @@ const server = http.createServer((req, res) => {
     await page.goto('http://localhost:4589/');
     await page.waitForTimeout(10000);
     await page.screenshot({ path: `_shots/${engine}-${name}-1.png` });
-    await page.click('.card[data-index="1"]'); await page.waitForTimeout(3500);
+    await page.click('.card[data-index="2"]'); await page.waitForTimeout(3500);
     await page.screenshot({ path: `_shots/${engine}-${name}-2.png` });
     await page.click('.card[data-index="6"]'); await page.waitForTimeout(3500);
     await page.screenshot({ path: `_shots/${engine}-${name}-3.png` });

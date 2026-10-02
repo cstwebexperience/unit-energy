@@ -1128,10 +1128,10 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
             </div>
         </div>
 
-        <div class="berries-container-bg off">
-            <model-viewer class="berry b7" src="assets/cherry.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="-20deg 110deg 105%"></model-viewer>
-            <model-viewer class="berry b8" src="assets/cherry.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="160deg 45deg 105%"></model-viewer>
-            <model-viewer class="berry b9" src="assets/cherry.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="45deg 20deg 105%"></model-viewer>
+        <div class="berries-container-bg">
+            <model-viewer class="berry b7" src="assets/bolt.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="-20deg 110deg 105%"></model-viewer>
+            <model-viewer class="berry b8" src="assets/ice.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="160deg 45deg 105%"></model-viewer>
+            <model-viewer class="berry b9" src="assets/bolt.glb" environment-image="neutral" exposure="1.0" interaction-prompt="none" camera-orbit="45deg 20deg 105%"></model-viewer>
         </div>
 
         <div class="hero-center">
@@ -1144,13 +1144,13 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
             <div class="hero-bottle-wrap"><img class="hero-bottle" src="assets/produse/fuel-punch.webp" alt=""></div>
         </div>
 
-        <div class="berries-container off">
-            <model-viewer class="berry b1" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="45deg 120deg 105%"></model-viewer>
-            <model-viewer class="berry b2" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="-120deg 45deg 105%"></model-viewer>
-            <model-viewer class="berry b3" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="200deg 90deg 105%"></model-viewer>
-            <model-viewer class="berry b4" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="10deg 20deg 105%"></model-viewer>
-            <model-viewer class="berry b5" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="-45deg 160deg 105%"></model-viewer>
-            <model-viewer class="berry b6" src="assets/cherry.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="80deg 75deg 105%"></model-viewer>
+        <div class="berries-container">
+            <model-viewer class="berry b1" src="assets/ice.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="45deg 120deg 105%"></model-viewer>
+            <model-viewer class="berry b2" src="assets/bolt.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="-120deg 45deg 105%"></model-viewer>
+            <model-viewer class="berry b3" src="assets/ice.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="200deg 90deg 105%"></model-viewer>
+            <model-viewer class="berry b4" src="assets/bolt.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="10deg 20deg 105%"></model-viewer>
+            <model-viewer class="berry b5" src="assets/ice.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="-45deg 160deg 105%"></model-viewer>
+            <model-viewer class="berry b6" src="assets/bolt.glb" environment-image="neutral" exposure="1.2" interaction-prompt="none" camera-orbit="80deg 75deg 105%"></model-viewer>
         </div>
 
         <div class="hero-right">
@@ -1338,6 +1338,12 @@ body.menu-open .menu-btn span::after { transform: translateY(-6px) rotate(-45deg
     <!-- Preload fruit models to avoid lag during switch -->
     <model-viewer src="assets/blueberry.glb"></model-viewer>
     <model-viewer src="assets/apple.glb"></model-viewer>
+    <model-viewer src="assets/cherry.glb"></model-viewer>
+    <model-viewer src="assets/peach.glb"></model-viewer>
+    <model-viewer src="assets/blackberry.glb"></model-viewer>
+    <model-viewer src="assets/raspberry.glb"></model-viewer>
+    <model-viewer src="assets/strawberry.glb"></model-viewer>
+    <model-viewer src="assets/orange.glb"></model-viewer>
     <model-viewer src="assets/lemon.glb"></model-viewer>
 </div>
 
@@ -1347,7 +1353,7 @@ const WARN_ENERGY = 'Conținut ridicat de cafeină. Nu se recomandă copiilor sa
 const WARN_LIGHT = 'Conține cafeină (12 mg/100 ml).';
 const PRODUCTS = [
     { id: 'original', line: 'energy', kicker: 'ENERGY DRINK', name: 'Original', lines: ['Original'], type: 'can', vol: '0,25 L',
-      img: 'assets/produse/original.webp', tex: 'assets/tex-original.jpg', fruit: null,
+      img: 'assets/produse/original.webp', tex: 'assets/tex-original.jpg', fruit: ['assets/bolt.glb', 'assets/ice.glb'],
       bg: ['#b8391a', '#4f1508', '#0d0302'], accent: '#ff5a2a', onAccent: '#140603', card: ['#3a1208', '#0c0302'],
       tag: 'Gustul clasic de energizant. Simplu, puternic, fără arome adăugate de fructe.',
       caffeine: '30 mg', dose: '75 mg', taurine: '1 g', vit: ['B12', 'B6', 'B3', 'B5', 'B2'], warn: WARN_ENERGY,
@@ -1359,43 +1365,43 @@ const PRODUCTS = [
       caffeine: '30 mg', dose: '75 mg', taurine: '1 g', vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_ENERGY,
       ing: 'Apă; zahăr; dextroză; acidifiant: acid citric; dioxid de carbon; taurină (0,4%); corectori de aciditate: carbonați de sodiu și carbonați de magneziu; aromă; colorant: complecși de cupru ai clorofilelor și clorofilinelor; concentrat de șofrănel cu rol de colorare; cafeină (0,03%); vitamine: niacină, acid pantotenic, vitamina B6 și vitamina B12.' },
     { id: 'globery', line: 'energy', kicker: 'ENERGY DRINK', name: 'Globery', lines: ['Globery'], type: 'can', vol: '0,25 L',
-      img: 'assets/produse/globery.webp', tex: 'assets/tex-globery.jpg', fruit: 'assets/blueberry.glb',
+      img: 'assets/produse/globery.webp', tex: 'assets/tex-globery.jpg', fruit: ['assets/blueberry.glb', 'assets/blackberry.glb'],
       bg: ['#5a36c8', '#221152', '#06031a'], accent: '#9d80ff', onAccent: '#0c0624', card: ['#271455', '#07041a'],
       tag: 'Intens fructată și proaspătă, cu note de fructe de pădure bine coapte, accente dulci de mure și afine și o tentă discret acidulată. Finalul aromatic este revigorant, cu o senzație plăcută de prospețime.',
       caffeine: '30 mg', dose: '75 mg', taurine: '1 g', vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_ENERGY,
       ing: 'Apă; zahăr; dextroză; acidifiant: acid citric; dioxid de carbon; taurină (0,4%); corectori de aciditate: carbonați de sodiu și carbonați de magneziu; aromă; concentrat de morcov cu rol de colorare; cafeină (0,03%); vitamine: niacină, acid pantotenic, vitamina B6 și vitamina B12.' },
     { id: 'u18-original', line: 'u18', kicker: 'UNDER 18', name: 'Original', lines: ['Original'], type: 'can', vol: '0,25 L',
-      img: 'assets/produse/u18-original.webp', tex: 'assets/tex-u18-original.jpg', fruit: null,
+      img: 'assets/produse/u18-original.webp', tex: 'assets/tex-u18-original.jpg', fruit: ['assets/bolt.glb', 'assets/ice.glb'],
       bg: ['#e2531f', '#7a240a', '#160503'], accent: '#ffd21f', onAccent: '#1a1400', card: ['#a8350f', '#2a0903'],
       tag: 'Gustul clasic de energizant, cu 60% mai puțină cafeină și fără taurină.',
       caffeine: '12 mg', dose: '30 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5', 'B2'], warn: WARN_LIGHT,
       ing: 'Apă; zahăr; dextroză; acidifiant: acid citric; dioxid de carbon; corector de aciditate: carbonați de sodiu; carbonat de magneziu; aromă; săruri de magneziu ale acidului citric; colorant: caramel (E150d); cafeină (0,012% = 12 mg/100 ml); vitamine: niacină; acid pantotenic; vitamina B6; riboflavină și vitamina B12.' },
     { id: 'u18-skrr', line: 'u18', kicker: 'UNDER 18', name: 'SKRR', lines: ['SKRR'], type: 'can', vol: '0,25 L',
-      img: 'assets/produse/u18-skrr.webp', tex: 'assets/tex-u18-skrr.jpg', fruit: 'assets/blueberry.glb',
+      img: 'assets/produse/u18-skrr.webp', tex: 'assets/tex-u18-skrr.jpg', fruit: ['assets/blueberry.glb', 'assets/raspberry.glb'],
       bg: ['#8f949e', '#363a43', '#0a0b0e'], accent: '#f2d21b', onAccent: '#1a1600', card: ['#5d616b', '#121317'],
       tag: 'Fructată și răcoritoare, cu note de fructe de pădure și accente dulci, ușor acidulate, care îi conferă un caracter plăcut și revigorant.',
       caffeine: '12 mg', dose: '30 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
       ing: 'Apă; zahăr; dextroză; acidifiant: acid citric; dioxid de carbon; corector de aciditate: carbonați de sodiu; carbonat de magneziu; aromă; săruri de magneziu ale acidului citric; concentrat de morcov cu rol de colorare; colorant: albastru briliant FCF; cafeină (0,012% = 12 mg/100 ml); vitamine: niacină, acid pantotenic, vitamina B6 și vitamina B12.' },
     { id: 'u18-peachup', line: 'u18', kicker: 'UNDER 18', name: 'Peachup', lines: ['Peachup'], type: 'can', vol: '0,25 L',
-      img: 'assets/produse/u18-peachup.webp', tex: 'assets/tex-u18-peachup.jpg', fruit: null,
+      img: 'assets/produse/u18-peachup.webp', tex: 'assets/tex-u18-peachup.jpg', fruit: 'assets/peach.glb', leaves: true,
       bg: ['#cfa522', '#5c450a', '#120d02'], accent: '#ffe066', onAccent: '#1a1400', card: ['#8a6c12', '#1a1303'],
       tag: 'Aromă de piersică. Cafeină redusă, fără taurină.',
       caffeine: '12 mg', dose: '30 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
       ing: 'Apă, zahăr, dextroză, acidifiant: acid citric; dioxid de carbon; corector de aciditate: carbonați de sodiu; carbonați de magneziu; aromă; stabilizator: gumă arabică; săruri de magneziu ale acidului citric; colorant beta-apo-8’-carotenal; cafeină (0,012% = 12 mg/100 ml); vitamine: niacină, acid pantotenic, vitamina B6 și vitamina B12.' },
     { id: 'fuel-punch', line: 'water', kicker: 'ENERGY WATER', name: 'Fuel Punch', lines: ['Fuel', 'Punch'], type: 'bottle', vol: '0,6 L',
-      img: 'assets/produse/fuel-punch.webp', fruit: ['assets/cherry.glb', 'assets/blueberry.glb'],
+      img: 'assets/produse/fuel-punch.webp', fruit: ['assets/strawberry.glb', 'assets/orange.glb', 'assets/cherry.glb'],
       bg: ['#ff4b2b', '#8a1a0c', '#180402'], accent: '#ff8a6b', onAccent: '#1a0503', card: ['#b8240f', '#2a0603'],
       tag: 'Profil fructat și răcoritor, cu arome de fructe specifice unui punch. Gust plăcut și echilibrat, cu o notă dulce și o ușoară aciditate care susține senzația de prospețime. Finalul este fructat, lejer și răcoritor.',
       caffeine: '12 mg', dose: '72 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
       ing: 'Apă; zahăr; acidifiant: acid citric; săruri de magneziu ale acidului citric; coloranți: licopen și caroteni; stabilizator: carboximetilceluloză de sodiu; antioxidant: acid ascorbic; arome; vitamine: niacină, vitamina B6, acid pantotenic și vitamina B12; cafeină extrasă din sursă naturală (12 mg/100 ml / 0,012%); îndulcitor: glicozide steviolice din stevia.' },
     { id: 'peach-up', line: 'water', kicker: 'ENERGY WATER', name: 'Peach Up', lines: ['Peach', 'Up'], type: 'bottle', vol: '0,6 L',
-      img: 'assets/produse/peach-up.webp', fruit: null,
+      img: 'assets/produse/peach-up.webp', fruit: 'assets/peach.glb', leaves: true,
       bg: ['#f2a01c', '#8a520a', '#180d02'], accent: '#ffc94d', onAccent: '#1a0f00', card: ['#b06d0c', '#2a1703'],
       tag: 'Apă energizantă cu aromă de piersică, cu cafeină din surse naturale.',
       caffeine: '12 mg', dose: '72 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
       ing: 'Apă; zahăr; acidifiant: acid citric; săruri de magneziu ale acidului citric; stabilizatori: carboximetilceluloză de sodiu și gumă arabică; aromă; vitamine: niacină, vitamina B6, acid pantotenic și vitamina B12; cafeină extrasă din sursă naturală (12 mg/100 ml / 0,012%); colorant: beta-apo-8’-carotenal; îndulcitor: glicozide steviolice din stevia.' },
     { id: 'lemon-aid', line: 'water', kicker: 'ENERGY WATER', name: 'Lemon Aid', lines: ['Lemon', 'Aid'], type: 'bottle', vol: '0,6 L',
-      img: 'assets/produse/lemon-aid.webp', fruit: 'assets/lemon.glb', leaves: true,
+      img: 'assets/produse/lemon-aid.webp', fruit: ['assets/lemon.glb', 'assets/ice.glb'], leaves: true,
       bg: ['#b9c45a', '#4a521f', '#0c0e04'], accent: '#eef57a', onAccent: '#161900', card: ['#6f7a2a', '#141705'],
       tag: 'Apă energizantă cu aromă de lămâie, cu cafeină din surse naturale.',
       caffeine: '12 mg', dose: '72 mg', taurine: null, vit: ['B12', 'B6', 'B3', 'B5'], warn: WARN_LIGHT,
@@ -1539,14 +1545,14 @@ async function switchFlavor(prev, next) {
         const nextBaseY = (Math.random() - 0.5) * range;
         const done = () => { completedBerries++; if (completedBerries === berries.length) isSwitching = false; };
 
-        if (!berry.offsetParent) { if (hasFruit) berry.src = fruitFor(i); done(); return; } // hidden on mobile
+        if (!berry.offsetParent) { if (hasFruit) setFruit(berry, fruitFor(i)); done(); return; } // hidden on mobile
 
         gsap.set(berry, { rotation: startAngle, x: currentBaseX, y: currentBaseY });
         gsap.timeline()
             .to(berry, {
                 x: centerX, y: centerY, rotation: startAngle + 45, scale: 0.1, opacity: 0,
                 duration: 0.5, ease: 'power2.in',
-                onComplete: () => { if (hasFruit) berry.src = fruitFor(i); heroCenter.style.zIndex = 50; }
+                onComplete: () => { if (hasFruit) setFruit(berry, fruitFor(i)); heroCenter.style.zIndex = 50; }
             })
             .to(berry, { duration: 0.3 })
             .to(berry, {
@@ -1568,6 +1574,14 @@ async function switchFlavor(prev, next) {
             });
     });
 }
+
+// Flat shapes (the bolt) must face the camera; round fruits keep their varied angles
+function setFruit(el, src) {
+    if (!el.dataset.orbit) el.dataset.orbit = el.getAttribute('camera-orbit');
+    el.src = src;
+    el.setAttribute('camera-orbit', src.includes('bolt') ? `${Math.round(Math.random() * 50 - 25)}deg ${Math.round(80 + Math.random() * 20)}deg 105%` : el.dataset.orbit);
+}
+allBerries.forEach(b => { if (b.getAttribute('src').includes('bolt')) setFruit(b, b.getAttribute('src')); });
 
 // Track berry states for smoothing
 allBerries.forEach(b => {
